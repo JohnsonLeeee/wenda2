@@ -18,6 +18,6 @@ public class ViewObject {
     }
 
     public Object getObject(String key) {
-        objs.get(key);
+        return objs.get(key);
     }
 }
