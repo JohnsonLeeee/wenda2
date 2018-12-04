@@ -13,11 +13,11 @@ import java.util.Map;
 public class ViewObject {
     private Map<String, Object> objs = new HashMap<>();
 
-    public void setObjs(String key, Object value) {
+    public void set(String key, Object value) {
         objs.put(key, value);
     }
 
-    public Object getObject(String key) {
+    public Object get(String key) {
         return objs.get(key);
     }
 }
