@@ -35,11 +35,11 @@ public class LoginController {
             if (map.containsKey("msg")) {
                 model.addAttribute("msg", map.get("msg"));
             }
+            return "redirect:/";
         } catch (Exception e) {
             logger.error("注册异常", e.getMessage());
             return "login";
         }
-        return "login";
     }
 
 
