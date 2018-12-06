@@ -17,14 +17,17 @@ public interface UserDAO {
 
     @Insert({"insert into ", TABLE_NAME, "(", INSERT_FIELDS,
             ") values (#{name},#{password},#{salt},#{headUrl})"})
-    public void addUser(User user);
+    void addUser(User user);
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where id=#{id}"})
-    public User selectById(int id);
+    User selectById(int id);
+
+    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where name=#{name}"})
+    User selectByName(String name);
 
     @Update({"update ", TABLE_NAME, " set password=#{password} where id=#{id}"})
-    public void updatePassword(User user);
+    void updatePassword(User user);
 
     @Delete({"delete from ", TABLE_NAME, " where id=#{id}"})
-    public void deleteById(int id);
+    void deleteById(int id);
 }
