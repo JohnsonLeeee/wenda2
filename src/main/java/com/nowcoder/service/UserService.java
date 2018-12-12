@@ -1,8 +1,12 @@
 package com.nowcoder.service;
 
+import com.nowcoder.dao.LoginTicketDAO;
 import com.nowcoder.dao.UserDAO;
+import com.nowcoder.model.LoginTicket;
 import com.nowcoder.model.User;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import util.WendaUtil;
@@ -17,15 +21,23 @@ import java.util.*;
  **/
 @Service
 public class UserService {
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     @Autowired
-    UserDAO userDAO;
+    private UserDAO userDAO;
+
+    @Autowired
+    private LoginTicketDAO loginTicketDAO;
 
     public User getUser(int id){
         return userDAO.selectById(id);
     }
 
+
     public Map<String, String> register(String username, String password) {
         Map<String, String> map = new HashMap<>();
+
+        // org.apache.commons.lang.StringUtils类是用于操作Java.lang.String类的，而且此类是null安全的，
+        // 即如果输入参数String为null，则不会抛出NullPointerException异常。
         if (StringUtils.isBlank(username)) {
             map.put("msg", "用户名不能为空");
             return map;
@@ -48,9 +60,15 @@ public class UserService {
         user.setHeadUrl(String.format("http://images.nowcoder.com/head/%dt.png", new Random().nextInt(1000)));
         user.setPassword(WendaUtil.MD5(password+salt));
         userDAO.addUser(user);
+        logger.info("userDAO执行成功");
+
+        String ticket = addLoginTicket(user.getId());
+        map.put("ticket", ticket);
+        logger.info("addLoginTicket执行成功");
 
         return map;
     }
+
 
     public Map<String, String> login(String username, String password) {
         Map<String, String> map = new HashMap<>();
@@ -75,7 +93,26 @@ public class UserService {
             map.put("msg", "密码错误");
         }
 
+        String ticket = addLoginTicket(user.getId());
+        map.put("ticket", ticket);
+
         return map;
+    }
+
+
+    public String addLoginTicket(int userId) {
+        logger.info("开始执行addLoginTicket");
+        LoginTicket loginTicket = new LoginTicket();
+        loginTicket.setUserId(userId);
+        Date now = new Date();
+        now.setTime(now.getTime()+3600*24*100);
+        loginTicket.setExpired(now);
+        loginTicket.setStatus(0);
+        loginTicket.setTicket(UUID.randomUUID().toString().replaceAll("-", ""));
+        logger.info("即将执行loginTicketDAO.addTicket,loginTicket:" + loginTicket);
+        loginTicketDAO.addTicket(loginTicket);
+        logger.info("addloginticket执行结束");
+        return loginTicket.getTicket();
     }
 
 
