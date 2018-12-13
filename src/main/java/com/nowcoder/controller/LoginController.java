@@ -36,6 +36,7 @@ public class LoginController {
     public String reg(Model model,
                       @RequestParam("username") String username,
                       @RequestParam("password") String password,
+                      @RequestParam(value = "next", required = false) String next,
                       HttpServletResponse response,
                       HttpServletRequest request
                       ) {
@@ -53,7 +54,7 @@ public class LoginController {
                 response.addCookie(cookie);
                 logger.info("Cookie:" + cookie);
 
-                return "redirect:/";
+                return "redirect:" + next;
             } else {
                 model.addAttribute("msg",map.get("msg"));
                 return "login";
@@ -70,7 +71,8 @@ public class LoginController {
 
 
     @RequestMapping(path = {"/reglogin"}, method = {RequestMethod.GET})
-    public String reglogin(Model model) {
+    public String reglogin(Model model, @RequestParam(value = "next", defaultValue = "/") String next) {
+        model.addAttribute("next", next);
         return "login";
     }
 
@@ -79,6 +81,7 @@ public class LoginController {
                         @RequestParam("username") String username,
                         @RequestParam("password") String password,
                         @RequestParam(value = "rememberme", defaultValue = "false") boolean rememberme,
+                        @RequestParam(value = "next", required = false) String next,
                         HttpServletResponse response) {
         try {
             Map<String, String> map = userService.login(username, username);
@@ -89,7 +92,7 @@ public class LoginController {
                 response.addCookie(cookie);
 
 
-                return "redirect:/";
+                return "redirect:" + next;
 
             } else {
                 model.addAttribute("msg",map.get("msg"));
