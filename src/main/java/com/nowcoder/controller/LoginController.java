@@ -1,6 +1,7 @@
 package com.nowcoder.controller;
 
 import com.nowcoder.service.UserService;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 /**
@@ -50,6 +52,7 @@ public class LoginController {
                 cookie.setPath("/");
                 response.addCookie(cookie);
                 logger.info("Cookie:" + cookie);
+
                 return "redirect:/";
             } else {
                 model.addAttribute("msg",map.get("msg"));
@@ -84,7 +87,10 @@ public class LoginController {
                 // cookie.setPath的用法
                 cookie.setPath("/");
                 response.addCookie(cookie);
+
+
                 return "redirect:/";
+
             } else {
                 model.addAttribute("msg",map.get("msg"));
                 return "login";
