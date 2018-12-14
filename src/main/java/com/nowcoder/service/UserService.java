@@ -111,7 +111,7 @@ public class UserService {
         loginTicket.setTicket(UUID.randomUUID().toString().replaceAll("-", ""));
         logger.info("即将执行loginTicketDAO.addTicket,loginTicket:" + loginTicket);
         loginTicketDAO.addTicket(loginTicket);
-        logger.info("addloginticket执行结束");
+        logger.info("addLoginTicket执行结束");
         return loginTicket.getTicket();
     }
 

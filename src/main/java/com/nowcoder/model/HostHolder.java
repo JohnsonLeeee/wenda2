@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class HostHolder {
 
     // 这块完全不懂。
-    private static ThreadLocal<User> users = new ThreadLocal<User>();
+    private static ThreadLocal<User> users = new ThreadLocal<>();
 
     public User getUser() {
         return users.get();

@@ -36,7 +36,7 @@ public class LoginController {
     public String reg(Model model,
                       @RequestParam("username") String username,
                       @RequestParam("password") String password,
-                      @RequestParam(value = "next", required = false) String next,
+                      @RequestParam(value = "next", defaultValue = "/") String next,
                       HttpServletResponse response,
                       HttpServletRequest request
                       ) {
@@ -81,7 +81,7 @@ public class LoginController {
                         @RequestParam("username") String username,
                         @RequestParam("password") String password,
                         @RequestParam(value = "rememberme", defaultValue = "false") boolean rememberme,
-                        @RequestParam(value = "next", required = false) String next,
+                        @RequestParam(value = "next", defaultValue = "/") String next,
                         HttpServletResponse response) {
         try {
             Map<String, String> map = userService.login(username, username);
@@ -90,7 +90,6 @@ public class LoginController {
                 // cookie.setPath的用法
                 cookie.setPath("/");
                 response.addCookie(cookie);
-
 
                 return "redirect:" + next;
 
