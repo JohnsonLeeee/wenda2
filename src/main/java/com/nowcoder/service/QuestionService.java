@@ -21,4 +21,13 @@ public class QuestionService {
     public List<Question> getLatestQuestions(int userId, int offset, int limit) {
         return questionDAO.selectLatestQuestions(userId, offset, limit);
     }
+
+    public int addQuestion(Question question) {
+
+        // TODO 敏感词过滤
+        // lishuai_todo 练习todo的使用
+        // fixme fixme的使用
+
+        return questionDAO.addQuestion(question) > 0 ? question.getId() : 0;
+    }
 }

@@ -17,6 +17,7 @@ public interface QuestionDAO {
     String INSERT_FIELDS = " title, content, created_date, user_id, comment_count ";
     String SELECT_FIELDS = " id, " + INSERT_FIELDS;
 
+    // issue : 这里返回值为什么为int?
     @Insert({"insert into ", TABLE_NAME, "(", INSERT_FIELDS,
             ") values (#{title},#{content},#{createdDate},#{userId},#{commentCount})"})
     int addQuestion(Question question);
