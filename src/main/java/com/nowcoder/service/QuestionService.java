@@ -4,6 +4,7 @@ import com.nowcoder.dao.QuestionDAO;
 import com.nowcoder.model.Question;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.HtmlUtils;
 
 import java.util.List;
 
@@ -24,6 +25,8 @@ public class QuestionService {
 
     public int addQuestion(Question question) {
 
+        question.setContent(HtmlUtils.htmlEscape(question.getContent()));
+        question.setTitle(HtmlUtils.htmlEscape(question.getTitle()));
         // TODO 敏感词过滤
         // lishuai_todo 练习todo的使用
         // fixme fixme的使用

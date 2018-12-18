@@ -1,5 +1,6 @@
 package com.nowcoder;
 
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -12,6 +13,8 @@ import java.util.UUID;
 public class practice {
     public static void main(String[] args) {
         UUID uuid = UUID.randomUUID();
+        Random random = new Random();
+        System.out.println(random.nextInt(9999));
     }
 
 }
