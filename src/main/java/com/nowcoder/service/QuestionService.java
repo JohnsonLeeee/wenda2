@@ -31,6 +31,7 @@ public class QuestionService {
         // lishuai_todo 练习todo的使用
         // fixme fixme的使用
 
+
         return questionDAO.addQuestion(question) > 0 ? question.getId() : 0;
     }
 }
