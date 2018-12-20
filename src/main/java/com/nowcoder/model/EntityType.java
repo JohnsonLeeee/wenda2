@@ -8,7 +8,7 @@ package com.nowcoder.model;
  **/
 
 public enum EntityType {
-    QUESTION("QUES"), COMMENT("CMT");
+    QUESTION("1"), COMMENT("2");
 
     private String abbr;
 

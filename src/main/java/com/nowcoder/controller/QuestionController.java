@@ -1,19 +1,20 @@
 package com.nowcoder.controller;
 
-import com.nowcoder.model.HostHolder;
-import com.nowcoder.model.Question;
+import com.nowcoder.model.*;
+import com.nowcoder.service.CommentService;
 import com.nowcoder.service.QuestionService;
+import com.nowcoder.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import util.WendaUtil;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @program: wenda
@@ -29,9 +30,35 @@ public class QuestionController {
 
     @Autowired
     QuestionService questionService;
-
     @Autowired
     HostHolder hostHolder;
+    @Autowired
+    UserService userService;
+    @Autowired
+    CommentService commentService;
+
+    @RequestMapping(path = {"/question/{qid}"}, method = {RequestMethod.GET})
+    public String questionDetail(@PathVariable("qid") int qid,
+                                 Model model)  {
+        Question question = questionService.selectQuestionById(qid);
+        User loggedInUser = hostHolder.getUser();
+
+        List<Comment> comments = commentService.getCommentByEntity(question.getId(), EntityType.QUESTION);
+        List<ViewObject> vos = new ArrayList<>();
+        for (Comment comment: comments) {
+            User commentUser = userService.getUser(comment.getUserId());
+            ViewObject viewObject = new ViewObject();
+            viewObject.set("comment", comment);
+            viewObject.set("commentUser", commentUser);
+            vos.add(viewObject);
+        }
+
+        model.addAttribute("question", question);
+        model.addAttribute("loggedInUser", loggedInUser);
+        model.addAttribute("vos", vos);
+
+        return "detail";
+    }
 
     @RequestMapping(path = "/question/add", method = {RequestMethod.POST})
     @ResponseBody

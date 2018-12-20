@@ -36,7 +36,7 @@ public class CommentController {
     public String addComment(@RequestParam("questionId") int questionId,
                              @RequestParam("content") String content) {
         try {
-            // logger.info("开始执行CommentController.addComment()");
+            logger.info(String.format("开始执行CommentController.addComment(),questionId:%d,content:%s", questionId, content));
             Comment comment = new Comment();
             comment.setContent(content);
             if (hostHolder.getUser() != null) {

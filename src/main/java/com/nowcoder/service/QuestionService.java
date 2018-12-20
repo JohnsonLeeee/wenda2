@@ -19,6 +19,10 @@ public class QuestionService {
     @Autowired
     QuestionDAO questionDAO;
 
+    public Question selectQuestionById(int questionId) {
+        return questionDAO.selectQuestionById(questionId);
+    }
+
     public List<Question> getLatestQuestions(int userId, int offset, int limit) {
         return questionDAO.selectLatestQuestions(userId, offset, limit);
     }
