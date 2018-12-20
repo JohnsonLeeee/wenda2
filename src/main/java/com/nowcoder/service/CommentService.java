@@ -1,6 +1,7 @@
 package com.nowcoder.service;
 
 import com.nowcoder.dao.CommentDAO;
+import com.nowcoder.dao.QuestionDAO;
 import com.nowcoder.model.Comment;
 import com.nowcoder.model.EntityType;
 import org.springframework.beans.factory.annotation.Autowired;
