@@ -60,9 +60,6 @@ public class SensitiveService implements InitializingBean {
     private class TrieNode {
         private boolean end = false;
 
-        // Map里用Character不用char的原因：char是基本数据类型，不能传入到Map中
-        // char是基本数据类型，Character是其包装类型。
-        // tips: 这里用Map实现和下个节点的链接，而不是传统的直接指向下一个节点。
         private Map<Character, TrieNode> subNodes = new HashMap<>();
 
         void addSubNode(Character key, TrieNode node) {
