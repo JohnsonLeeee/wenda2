@@ -38,7 +38,6 @@ public class UserService {
         return userDAO.selectById(id);
     }
 
-
     public Map<String, String> register(String username, String password) {
         Map<String, String> map = new HashMap<>();
 
