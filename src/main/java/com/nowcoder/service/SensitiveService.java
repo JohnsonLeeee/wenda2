@@ -58,7 +58,7 @@ public class SensitiveService implements InitializingBean {
 
     // 前缀树的构造
     private class TrieNode {
-        private boolean end = true;
+        private boolean end = false;
 
         private Map<Character, TrieNode> subNodes = new HashMap<>();
 
