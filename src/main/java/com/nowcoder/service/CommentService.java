@@ -26,11 +26,23 @@ public class CommentService {
     @Autowired
     MySensitiveService mySensitiveService;
 
+    /**
+     * 添加一条评论
+     * @param comment comment类
+     * @return 添加成功就返回comment的Id,添加失败返回0
+     */
     public int addComment(Comment comment) {
         comment.setContent(HtmlUtils.htmlEscape(comment.getContent()));
         comment.setContent(mySensitiveService.filter(comment.getContent()));
         return commentDAO.addComment(comment) > 0 ? comment.getId() : 0;
     }
+
+    /**
+     * 获取评论
+     * @param entityId question/comment的id
+     * @param entityType question/comment
+     * @return 返回Comment的列表
+     */
 
     public List<Comment> getCommentByEntity(int entityId, EntityType entityType) {
         switch (entityType) {
@@ -48,8 +60,4 @@ public class CommentService {
     public boolean deleteComment(int commentId) {
         return commentDAO.updateComment(commentId, 1);
     }
-
-
-
-
 }
