@@ -23,9 +23,12 @@ public class CommentService {
 
     @Autowired
     CommentDAO commentDAO;
+    @Autowired
+    MySensitiveService mySensitiveService;
 
     public int addComment(Comment comment) {
         comment.setContent(HtmlUtils.htmlEscape(comment.getContent()));
+        comment.setContent(mySensitiveService.filter(comment.getContent()));
         return commentDAO.addComment(comment) > 0 ? comment.getId() : 0;
     }
 
