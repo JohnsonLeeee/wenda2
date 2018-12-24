@@ -18,6 +18,8 @@ import java.util.List;
 public class QuestionService {
     @Autowired
     QuestionDAO questionDAO;
+    @Autowired
+    MySensitiveService mySensitiveService;
 
     public Question selectQuestionById(int questionId) {
         return questionDAO.selectQuestionById(questionId);
@@ -31,9 +33,12 @@ public class QuestionService {
 
         question.setContent(HtmlUtils.htmlEscape(question.getContent()));
         question.setTitle(HtmlUtils.htmlEscape(question.getTitle()));
+        question.setTitle(mySensitiveService.filter(question.getTitle()));
+        question.setContent(mySensitiveService.filter(question.getContent()));
         // TODO 敏感词过滤
         // lishuai_todo 练习todo的使用
         // fixme fixme的使用
+
 
         return questionDAO.addQuestion(question) > 0 ? question.getId() : 0;
     }
