@@ -23,10 +23,12 @@ import java.util.Map;
 @Service
 public class SensitiveService implements InitializingBean {
     private static final Logger logger = LoggerFactory.getLogger(SensitiveService.class);
-    // InitializingBean的用法
+    // issue: InitializingBean的用法,不懂
     @Override
     public void afterPropertiesSet() throws Exception {
         try {
+            // issue： 不懂为什么这么用，相关知识：多线程，类加载器，IO流
+            // issue: 这里为什么可以直接读取resources下的sensitive.txt文件
             InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("SensitiveWords.txt");
             InputStreamReader read = new InputStreamReader(is);
             BufferedReader bufferedReader = new BufferedReader(read);
@@ -34,6 +36,7 @@ public class SensitiveService implements InitializingBean {
             while((lineTxt = bufferedReader.readLine()) != null) {
                 addWord(lineTxt.trim());
             }
+            read.close();
         } catch (Exception e) {
             logger.error("读取敏感词文件失败");
         }

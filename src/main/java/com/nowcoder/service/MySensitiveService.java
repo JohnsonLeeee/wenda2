@@ -1,7 +1,16 @@
 package com.nowcoder.service;
 
+import jdk.internal.util.xml.impl.Input;
+import org.apache.commons.lang.CharUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 import sun.text.normalizer.Trie;
 
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,10 +21,34 @@ import java.util.Map;
  * @create: 2018-12-23 19:05
  **/
 
-public class MySensitiveService {
+@Service
+public class MySensitiveService implements InitializingBean {
+    private static final Logger logger = LoggerFactory.getLogger(MySensitiveService.class);
 
     // 初始化根节点
-    TrieNode rootNode = new TrieNode();
+    private TrieNode rootNode = new TrieNode();
+
+    // todo 外部文件读取所有敏感词
+    // issue: Initializing的用法咋用
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        try {
+            // 注意这里读取文件的方法，ResourceUtils.getFile("classpath:SensitiveWords.txt");
+            File sensitiveWordsFile = ResourceUtils.getFile("classpath:SensitiveWords.txt");
+            FileReader fileReader = new FileReader(sensitiveWordsFile);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            String sensitiveWord;
+            // issue: 为什么while里可以写赋值语句
+            while ((sensitiveWord = bufferedReader.readLine()) != null) {
+                addSensitiveWord(sensitiveWord.trim());
+            }
+            fileReader.close();
+            bufferedReader.close();
+        } catch (IOException e) {
+            logger.error("读取敏感词文件错误");
+        }
+
+    }
 
     // 构造前缀树
     class TrieNode {
@@ -38,8 +71,8 @@ public class MySensitiveService {
             return isEnd;
         }
 
-        void setEnd(boolean isKey) {
-            this.isEnd = isKey;
+        void setEnd(boolean isWordEnd) {
+            this.isEnd = isWordEnd;
         }
 
     }
@@ -49,6 +82,10 @@ public class MySensitiveService {
         TrieNode tempNode = rootNode;
         for (int i = 0; i < sensitiveWord.length(); i++) {
             char c = sensitiveWord.charAt(i);
+            // 忽略@#等符号
+            if (isSymbol(c)) {
+                continue;
+            }
             TrieNode node = tempNode.getSubNode(c);
             if (node == null) {
                 node = new TrieNode();
@@ -70,12 +107,21 @@ public class MySensitiveService {
         StringBuilder result = new StringBuilder();
         String replacement = "萌萌哒";
 
+        text = text.trim();
+
+
         // position 指针向后移位
         for(int position = 0; position < text.length(); position++) {
             TrieNode tempNode = rootNode;
             // charIndex 指针向后移位
+            boolean finishedForLoop = true;
             for(int charIndex = position; charIndex < text.length(); charIndex++) {
                 char character = text.charAt(charIndex);
+
+                // 过滤symbol
+                if (isSymbol(character)) {
+                    break;
+                }
 
                 if (tempNode.getSubNode(character) != null && !tempNode.getSubNode(character).isEnd()) {
                     // 1. character对应的节点存在， 即character在字典树中,但不是终点
@@ -85,26 +131,49 @@ public class MySensitiveService {
                     // 2. character对应的节点存在， 即character在字典树中,并且是终点
                     result.append(replacement);
                     position = charIndex;
+                    finishedForLoop = false;
                     break;
                 } else {
                     // 3. character对应的节点不存在， 即character不在字典树中，跳出charIndex的循环
                     result.append(text.charAt(position));
+                    finishedForLoop = false;
                     break;
                 }
             }
+            // 3. character对应的节点不存在， 即character不在字典树中，跳出charIndex的循环
+            // 修复bitc结尾，b找不到的bug
+            if (finishedForLoop) {
+                result.append(text.charAt(position));
+            }
+
         }
         return result.toString();
     }
 
+    private boolean isSymbol(char c) {
+        int ic = (int) c;
+        // 东亚文字 0x2E80-0x9FFF,返回非字母和数字，返回非东亚文字，其他都是Symbol
+        return !CharUtils.isAsciiAlphanumeric(c) && (ic < 0x2E80 || ic > 0x9FFF);
+    }
 
 
-    // todo 外部文件读取所有敏感词
+
+
 
     // 测试敏感词过滤功能
     public static void main(String[] args) {
         MySensitiveService test = new MySensitiveService();
         test.addSensitiveWord("bitch");
-        String filter_text = test.filter("A bit is not a bitch.");
+        test.addSensitiveWord("沙雕");
+        String filter_text = test.filter("bitc");
         System.out.println(filter_text);
+        System.out.println(test.filter("你是@沙@雕@吗？"));
+        System.out.println(test.filter("你是沙@雕吗？"));
+        System.out.println(test.filter("你是沙雕吗？"));
+        // y=x表达式返回的是什么
+        String x = "dog";
+        String y;
+        System.out.println(y=x);
+        System.out.println(y);
     }
 }
