@@ -16,7 +16,7 @@ import java.util.Map;
 
 /**
  * @program: wenda
- * @description: 自己实现的SensitiveService类和敏感词过滤算法
+ * @description: 自己实现的SensitiveService类和敏感词过滤算法,第五课
  * @author: Li Shuai
  * @create: 2018-12-23 19:05
  **/
