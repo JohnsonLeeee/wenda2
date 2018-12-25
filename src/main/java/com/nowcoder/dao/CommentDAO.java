@@ -30,7 +30,8 @@ public interface CommentDAO {
     int addComment(Comment comment);
 
     /**
-     *
+     * 对于多个参数来说，每个参数之前都要加上@Param注解，要不然会找不到对应的参数进而报错
+     * issue : mybatis中#和$的区别
      * @param entityId 实体的id，比如question，comment的id
      * @param entityType 实体类型，question,comment等
      * @return 返回对应的comment的List

@@ -1,5 +1,6 @@
-package com.nowcoder;
+package com.nowcoder.dao;
 
+import com.nowcoder.WendaApplication;
 import com.nowcoder.dao.CommentDAO;
 import com.nowcoder.model.Comment;
 import com.nowcoder.model.EntityType;
