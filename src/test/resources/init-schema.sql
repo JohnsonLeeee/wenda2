@@ -51,7 +51,7 @@ CREATE TABLE `question` (
     `to_id` INT NULL,
     `content` TEXT NULL,
     `created_date` DATETIME NULL,
-    `has_read` INT NULL,
+    `has_read` boolean NULL,
     `conversation_id` VARCHAR(45) NOT NULL,
     PRIMARY KEY (`id`),
     INDEX `conversation_index` (`conversation_id` ASC),
