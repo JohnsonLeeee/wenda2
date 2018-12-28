@@ -1,6 +1,5 @@
 package com.nowcoder.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.nowcoder.model.HostHolder;
 import com.nowcoder.model.Message;
 import com.nowcoder.model.User;
@@ -11,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -40,6 +38,7 @@ public class MessageController {
     UserService userService;
     @Autowired
     MessageService messageService;
+
     @RequestMapping(path = {"/msg/addMessage"}, method = {RequestMethod.POST})
     @ResponseBody
     public String addMessage(@RequestParam("toName") String toName,
@@ -72,6 +71,21 @@ public class MessageController {
 
     @RequestMapping(path = {"/msg/list"}, method = {RequestMethod.GET})
     public String conversationList(Model model) {
+        if (hostHolder.getUser() == null) {
+            return "redirect:/reglogin";
+        }
+        int localUserId = hostHolder.getUser().getId();
+        List<Message> conversationList = messageService.getConversationList(localUserId, 0, 10);
+        List<ViewObject> conversations = new ArrayList<>();
+        for(Message message : conversationList) {
+            ViewObject vo = new ViewObject();
+            vo.set("message", message);
+            int targetId = message.getFromId() == localUserId ? message.getToId() : message.getFromId();
+            vo.set("user", userService.getUser(targetId));
+            conversations.add(vo);
+            vo.set("unread", messageService.getConversationUnreadCount(localUserId, message.getConversationId()));
+        }
+        model.addAttribute("conversations", conversations);
         return "letter";
     }
 
@@ -84,12 +98,19 @@ public class MessageController {
                 ViewObject viewObject = new ViewObject();
                 viewObject.set("message", message);
                 viewObject.set("user", userService.getUser(message.getFromId()));
+
                 messages.add(viewObject);
             }
             model.addAttribute("messages", messages);
         } catch (Exception e) {
             logger.error("获取详情失败！");
         }
+
+        // 点进页面后，用户与联系人消息设置为已读。
+        if  (!messageService.setHasReadTrue(hostHolder.getUser().getId(), conversationId)) {
+            logger.error("修改未读消息失败");
+        }
+
         return "letterDetail";
     }
 }

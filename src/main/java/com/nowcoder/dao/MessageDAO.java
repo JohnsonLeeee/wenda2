@@ -1,10 +1,7 @@
 package com.nowcoder.dao;
 
 import com.nowcoder.model.Message;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -44,7 +41,31 @@ public interface MessageDAO {
     List<Message> getConversationDetail(@Param("conversationId") String conversationId,
                                         @Param("offset") int offset, @Param("limit") int limit);
 
+    /**
+     *  issue: sql语句这块还要多学习；
 
+     *
+     *  统计分类,如在分组内的最大值，最小值，平均值，个数等：select count(id) from table_name group by conversation_id;
+     *  分页： 后边加limit 0, 10
+     * @param userId userId
+     * @param offset offset
+     * @param limit limit
+     * @return Message的列表，其中message的id是每个会话的数量
+     */
+    @Select({"select ", INSERT_FIELDS, " ,count(id) as id from ( select * from ", TABLE_NAME,
+            " where from_id=#{userId} or to_id=#{userId} order by id desc) tt group by conversation_id  " +
+                    "order by created_date desc limit #{offset}, #{limit}"})
+    List<Message> getConversationList(@Param("userId") int userId,
+                                      @Param("offset") int offset, @Param("limit") int limit);
+
+    @Select({"select count(id) from ", TABLE_NAME,
+            "where has_read=0 and to_id=#{userId} and conversation_id=#{conversationId}"})
+    int getConversationUnreadCount(@Param("userId") int userId,
+                                   @Param("conversationId") String conversationId);
+
+    @Update({"update", TABLE_NAME, "SET has_read=1 where to_id=#{localUserId} and conversation_id=#{conversationId}"})
+    boolean setHasReadTrue(@Param("localUserId") int localUserId,
+                           @Param("conversationId") String conversationId);
 
 
 }
