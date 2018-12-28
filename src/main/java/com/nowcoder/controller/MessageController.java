@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.nowcoder.model.HostHolder;
 import com.nowcoder.model.Message;
 import com.nowcoder.model.User;
+import com.nowcoder.model.ViewObject;
 import com.nowcoder.service.MessageService;
 import com.nowcoder.service.UserService;
 import org.slf4j.Logger;
@@ -18,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import util.WendaUtil;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @program: wenda
@@ -73,7 +76,20 @@ public class MessageController {
     }
 
     @RequestMapping(path = {"/msg/detail"}, method = {RequestMethod.GET})
-    public String conversationDetail(Model model) {
+    public String conversationDetail(Model model, @RequestParam("conversationId") String conversationId) {
+        try {
+            List<Message> messageList = messageService.getConversationDetail(conversationId, 0, 10);
+            List<ViewObject> messages = new ArrayList<>();
+            for (Message message : messageList) {
+                ViewObject viewObject = new ViewObject();
+                viewObject.set("message", message);
+                viewObject.set("user", userService.getUser(message.getFromId()));
+                messages.add(viewObject);
+            }
+            model.addAttribute("messages", messages);
+        } catch (Exception e) {
+            logger.error("获取详情失败！");
+        }
         return "letterDetail";
     }
 }

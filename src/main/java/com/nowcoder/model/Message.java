@@ -15,7 +15,7 @@ public class Message {
     private int toId;
     private String content;
     private Date createdDate;
-    private boolean hasRead;
+    private boolean hasRead;// 视频里是int类型
     private String conversationId;
 
     public int getId() {
