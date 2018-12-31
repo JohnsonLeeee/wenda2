@@ -1,7 +1,7 @@
 package com.nowcoder.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import util.JedisAdapter;
+import com.nowcoder.util.JedisAdapter;
 
 /**
  * @program: wenda

@@ -1,4 +1,4 @@
-package util;
+package com.nowcoder.util;
 
 import com.alibaba.fastjson.JSONObject;
 import com.nowcoder.model.User;
@@ -10,7 +10,6 @@ import redis.clients.jedis.BinaryClient;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Tuple;
-import redis.clients.jedis.params.sortedset.ZIncrByParams;
 
 /**
  * @program: wenda
