@@ -50,11 +50,10 @@ public class CommentService {
             case COMMENT:  return commentDAO.selectByEntity(entityId, 2);
         }
         return commentDAO.selectByEntity(entityId, 1);
-
     }
 
-    public int getCommentCount(int entityId, int entityType) {
-        return commentDAO.getCommentCount(entityId, entityType);
+    public int getCommentCount(int entityId, EntityType entityType) {
+        return commentDAO.getCommentCount(entityId, entityType.getIntegerMode());
     }
 
     public boolean deleteComment(int commentId) {

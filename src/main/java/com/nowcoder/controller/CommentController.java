@@ -3,7 +3,6 @@ package com.nowcoder.controller;
 import com.nowcoder.model.Comment;
 import com.nowcoder.model.EntityType;
 import com.nowcoder.model.HostHolder;
-import com.nowcoder.model.Question;
 import com.nowcoder.service.CommentService;
 import com.nowcoder.service.QuestionService;
 import org.slf4j.Logger;
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import util.WendaUtil;
+import com.nowcoder.util.WendaUtil;
 
 import java.util.Date;
 
@@ -54,7 +53,7 @@ public class CommentController {
             commentService.addComment(comment);
 
             // 更新question表里的comment_count
-            int count = commentService.getCommentCount(comment.getEntityId(), comment.getEntityType());
+            int count = commentService.getCommentCount(comment.getEntityId(), comment.getEntityTypeByEnum());
             questionService.updateCommentCount(comment.getEntityId(), count);
         } catch (Exception e) {
             logger.error("增加论评失败" + e.getMessage());

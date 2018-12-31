@@ -2,6 +2,7 @@ package com.nowcoder.controller;
 
 import com.nowcoder.model.*;
 import com.nowcoder.service.CommentService;
+import com.nowcoder.service.LikeService;
 import com.nowcoder.service.QuestionService;
 import com.nowcoder.service.UserService;
 import org.slf4j.Logger;
@@ -10,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import util.WendaUtil;
+import com.nowcoder.util.WendaUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,6 +37,8 @@ public class QuestionController {
     UserService userService;
     @Autowired
     CommentService commentService;
+    @Autowired
+    LikeService likeService;
 
     @RequestMapping(path = {"/question/{qid}"}, method = {RequestMethod.GET})
     public String questionDetail(@PathVariable("qid") int qid,
@@ -50,12 +53,19 @@ public class QuestionController {
             ViewObject viewObject = new ViewObject();
             viewObject.set("comment", comment);
             viewObject.set("commentUser", commentUser);
+
+            viewObject.set("likeCount", likeService.getLikeCount(comment.getEntityTypeByEnum(), comment.getEntityId()));
+            if (hostHolder.getUser() == null) {
+                viewObject.set("liked", 0);
+            } else {
+                viewObject.set("liked", likeService.getLikeStatus(hostHolder.getUser().getId(), comment.getEntityTypeByEnum(), comment.getEntityId()));
+            }
             vos.add(viewObject);
         }
 
         model.addAttribute("question", question);
         model.addAttribute("loggedInUser", loggedInUser);
-        model.addAttribute("vos", vos);
+        model.addAttribute("comments", vos);
 
         return "detail";
     }

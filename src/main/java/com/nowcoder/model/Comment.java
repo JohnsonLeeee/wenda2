@@ -13,21 +13,13 @@ public class Comment {
     private int id;
     private String content;
     private int userId;
-    private int entityType;
+    private EntityType entityType;
     private int entityId;
     private Date createdDate;
     private int status;
 
     public void setEntityType(EntityType entityType) {
-        switch (entityType) {
-            case QUESTION:
-                this.entityType = 1;
-                break;
-            case COMMENT:
-                this.entityType = 2;
-                break;
-
-        }
+        this.entityType = entityType;
     }
 
     public int getId() {
@@ -55,11 +47,11 @@ public class Comment {
     }
 
     public int getEntityType() {
-        return entityType;
+        return entityType.getIntegerMode();
     }
 
-    public void setEntityType(int entityType) {
-        this.entityType = entityType;
+    public EntityType getEntityTypeByEnum() {
+        return entityType;
     }
 
     public int getEntityId() {

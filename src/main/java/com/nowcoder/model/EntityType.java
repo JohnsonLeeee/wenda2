@@ -8,15 +8,19 @@ package com.nowcoder.model;
  **/
 
 public enum EntityType {
-    QUESTION("1"), COMMENT("2");
+    QUESTION(1), COMMENT(2);
 
-    private String abbr;
+    private int abbr;
 
-    EntityType(String abbr) {
+    EntityType(int abbr) {
         this.abbr = abbr;
     }
 
-    public String getAbbr() {
+    public int getAbbr() {
+        return abbr;
+    }
+
+    public int getIntegerMode() {
         return abbr;
     }
 }
