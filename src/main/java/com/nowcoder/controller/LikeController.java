@@ -29,13 +29,23 @@ public class LikeController {
     @Autowired
     LikeService likeService;
 
-    @RequestMapping(path = {"/like"}, method = {RequestMethod.GET})
+    @RequestMapping(path = {"/like"}, method = {RequestMethod.POST})
     @ResponseBody
     public String like(@RequestParam("commentId") int commentId) {
         if (hostHolder.getUser() == null) {
             return WendaUtil.getJSONString(999, "未登录");
         }
         long likeCount = likeService.like(hostHolder.getUser().getId(), EntityType.COMMENT, commentId);
+        return WendaUtil.getJSONString(0, String.valueOf(likeCount));
+    }
+
+    @RequestMapping(path = {"/dislike"}, method = {RequestMethod.POST})
+    @ResponseBody
+    public String dislike(@RequestParam("commentId") int commentId) {
+        if (hostHolder.getUser() == null) {
+            return WendaUtil.getJSONString(999, "未登录");
+        }
+        long likeCount = likeService.disLike(hostHolder.getUser().getId(), EntityType.COMMENT, commentId);
         return WendaUtil.getJSONString(0, String.valueOf(likeCount));
     }
 
