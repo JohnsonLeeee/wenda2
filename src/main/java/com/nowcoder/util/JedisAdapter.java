@@ -218,7 +218,7 @@ public class JedisAdapter implements InitializingBean {
 
     }
 
-    public long sadd(String key, String value) {
+    public long sAdd(String key, String value) {
         Jedis jedis = null;
         try {
             jedis = pool.getResource();
@@ -233,7 +233,7 @@ public class JedisAdapter implements InitializingBean {
         return 0;
     }
 
-    public long srem(String key, String... value) {
+    public long sRem(String key, String... value) {
         Jedis jedis = null;
         try {
             jedis = pool.getResource();
@@ -248,7 +248,7 @@ public class JedisAdapter implements InitializingBean {
         return 0;
     }
 
-    public long scard(String key) {
+    public long sCard(String key) {
         Jedis jedis = null;
         try {
             jedis = pool.getResource();

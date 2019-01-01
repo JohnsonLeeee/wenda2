@@ -27,12 +27,12 @@ public class LikeService {
      */
     public long like(int userId, EntityType entityType, int entityId) {
         String likeKey = RedisKeyUtil.getLikeKey(entityType, entityId);
-        jedisAdapter.sadd(likeKey, String.valueOf(userId));
+        jedisAdapter.sAdd(likeKey, String.valueOf(userId));
 
         String disLikeKey = RedisKeyUtil.getDisLikeKey(entityType, entityId);
-        jedisAdapter.srem(disLikeKey, String.valueOf(userId));
+        jedisAdapter.sRem(disLikeKey, String.valueOf(userId));
 
-        return jedisAdapter.scard(likeKey);
+        return jedisAdapter.sCard(likeKey);
     }
 
     /**
@@ -44,12 +44,12 @@ public class LikeService {
      */
     public long disLike(int userId, EntityType entityType, int entityId) {
         String likeKey = RedisKeyUtil.getLikeKey(entityType, entityId);
-        jedisAdapter.srem(likeKey, String.valueOf(userId));
+        jedisAdapter.sRem(likeKey, String.valueOf(userId));
 
         String disLikeKey = RedisKeyUtil.getDisLikeKey(entityType, entityId);
-        jedisAdapter.sadd(disLikeKey, String.valueOf(userId));
+        jedisAdapter.sAdd(disLikeKey, String.valueOf(userId));
 
-        return jedisAdapter.scard(likeKey);
+        return jedisAdapter.sCard(likeKey);
     }
 
     /**
@@ -61,9 +61,9 @@ public class LikeService {
     public int getLikeStatus(int userId, EntityType entityType, int entityId) {
         String likeKey = RedisKeyUtil.getLikeKey(entityType, entityId);
         String disLikeKey = RedisKeyUtil.getDisLikeKey(entityType, entityId);
-        if (jedisAdapter.sismember(likeKey, String.valueOf(userId))) {
+        if (jedisAdapter.sIsMember(likeKey, String.valueOf(userId))) {
             return 1;
-        } else if (jedisAdapter.sismember(disLikeKey, String.valueOf(userId))) {
+        } else if (jedisAdapter.sIsMember(disLikeKey, String.valueOf(userId))) {
             return -1;
         }
         return 0;
@@ -78,7 +78,7 @@ public class LikeService {
     public long getLikeCount(EntityType entityType, int entityId) {
         String likeKey = RedisKeyUtil.getLikeKey(entityType, entityId);
 
-        return jedisAdapter.scard(likeKey);
+        return jedisAdapter.sCard(likeKey);
     }
 
 
