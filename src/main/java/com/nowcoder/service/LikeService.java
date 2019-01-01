@@ -18,6 +18,13 @@ public class LikeService {
     @Autowired
     JedisAdapter jedisAdapter;
 
+    /**
+     *
+     * @param userId 登录点赞用户的userId
+     * @param entityType entityType
+     * @param entityId entityId
+     * @return 返回comment的赞数
+     */
     public long like(int userId, EntityType entityType, int entityId) {
         String likeKey = RedisKeyUtil.getLikeKey(entityType, entityId);
         jedisAdapter.sadd(likeKey, String.valueOf(userId));
@@ -28,6 +35,13 @@ public class LikeService {
         return jedisAdapter.scard(likeKey);
     }
 
+    /**
+     *
+     * @param userId 登录用户的userId
+     * @param entityType entityType
+     * @param entityId entityId
+     * @return 返回comment的赞数
+     */
     public long disLike(int userId, EntityType entityType, int entityId) {
         String likeKey = RedisKeyUtil.getLikeKey(entityType, entityId);
         jedisAdapter.srem(likeKey, String.valueOf(userId));
@@ -38,7 +52,12 @@ public class LikeService {
         return jedisAdapter.scard(likeKey);
     }
 
-
+    /**
+     * @param userId userId
+     * @param entityType entityType
+     * @param entityId entityId
+     * @return 1， 点赞； 2， 点踩； 0， 无操作。
+     */
     public int getLikeStatus(int userId, EntityType entityType, int entityId) {
         String likeKey = RedisKeyUtil.getLikeKey(entityType, entityId);
         String disLikeKey = RedisKeyUtil.getDisLikeKey(entityType, entityId);
@@ -50,6 +69,12 @@ public class LikeService {
         return 0;
     }
 
+    /**
+     *
+     * @param entityType entityType
+     * @param entityId entityId
+     * @return 返回comment的赞数
+     */
     public long getLikeCount(EntityType entityType, int entityId) {
         String likeKey = RedisKeyUtil.getLikeKey(entityType, entityId);
 
