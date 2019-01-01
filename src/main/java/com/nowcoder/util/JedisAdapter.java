@@ -13,7 +13,7 @@ import redis.clients.jedis.Tuple;
 
 /**
  * @program: wenda
- * @description:
+ * @description: Redis
  * @author: Li Shuai
  * @create: 2018-11-29 15:26
  **/
@@ -174,6 +174,7 @@ public class JedisAdapter implements InitializingBean {
 
 
         //issue 这块不懂:第7课，70min
+        // 已解决
 //        JedisPool pool = new JedisPool();
 //        for (int i = 0; i < 100; i++) {
 //            Jedis j = pool.getResource();
