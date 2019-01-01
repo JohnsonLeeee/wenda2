@@ -2,7 +2,7 @@
     var Action = Base.createClass('main.util.Action');
 
     Base.ready({
-        initializefooter.html: fInitialize,
+        initialize: fInitialize,
         // 事件代理
         events: {
             'click .js-like': fVote,
