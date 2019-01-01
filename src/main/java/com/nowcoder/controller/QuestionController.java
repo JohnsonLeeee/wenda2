@@ -2,6 +2,7 @@ package com.nowcoder.controller;
 
 import com.nowcoder.model.*;
 import com.nowcoder.service.CommentService;
+import com.nowcoder.service.LikeService;
 import com.nowcoder.service.QuestionService;
 import com.nowcoder.service.UserService;
 import org.slf4j.Logger;
@@ -36,6 +37,8 @@ public class QuestionController {
     UserService userService;
     @Autowired
     CommentService commentService;
+    @Autowired
+    LikeService likeService;
 
     @RequestMapping(path = {"/question/{qid}"}, method = {RequestMethod.GET})
     public String questionDetail(@PathVariable("qid") int qid,
@@ -46,16 +49,35 @@ public class QuestionController {
         List<Comment> comments = commentService.getCommentByEntity(question.getId(), EntityType.QUESTION);
         List<ViewObject> vos = new ArrayList<>();
         for (Comment comment: comments) {
+            // 添加问题和user实体
             User commentUser = userService.getUser(comment.getUserId());
             ViewObject viewObject = new ViewObject();
             viewObject.set("comment", comment);
-            viewObject.set("commentUser", commentUser);
+            viewObject.set("user", commentUser);
+
+            // 添加点赞数量与状态
+            int liked;
+            if (loggedInUser == null) {
+                liked = 0;
+            } else {
+                liked = likeService.getLikeStatus(loggedInUser.getId(), comment.getEntityTypeEnum(), comment.getEntityId());
+            }
+            long likeCount = likeService.getLikeCount(comment.getEntityTypeEnum(), comment.getEntityId());
+            viewObject.set("liked", liked);
+            viewObject.set("likeCount", likeCount);
+
+            // 添加评论的评论数量
+            int commentCount = commentService.getCommentCount(comment.getEntityId(), comment.getEntityType());
+            viewObject.set("commentCount", commentCount);
+
             vos.add(viewObject);
         }
 
+        // 添加问题栏
         model.addAttribute("question", question);
         model.addAttribute("loggedInUser", loggedInUser);
-        model.addAttribute("vos", vos);
+        // 添加回答栏
+        model.addAttribute("comments", vos);
 
         return "detail";
     }

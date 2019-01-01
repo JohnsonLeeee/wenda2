@@ -36,7 +36,7 @@ public class CommentController {
     @Autowired
     QuestionService questionService;
 
-    @RequestMapping(path = {"/addcomment"}, method = {RequestMethod.POST})
+    @RequestMapping(path = {"/addComment"}, method = {RequestMethod.POST})
     public String addComment(@RequestParam("questionId") int questionId,
                              @RequestParam("content") String content) {
         try {

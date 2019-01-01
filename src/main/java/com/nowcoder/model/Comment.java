@@ -30,6 +30,15 @@ public class Comment {
         }
     }
 
+    public EntityType getEntityTypeEnum() {
+        if (entityType == 1) {
+            return EntityType.QUESTION;
+        } else if (entityType == 2) {
+            return EntityType.COMMENT;
+        }
+        return EntityType.QUESTION;
+    }
+
     public int getId() {
         return id;
     }
