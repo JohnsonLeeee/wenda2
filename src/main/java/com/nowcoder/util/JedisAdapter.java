@@ -253,7 +253,9 @@ public class JedisAdapter implements InitializingBean {
         Jedis jedis = null;
         try {
             jedis = pool.getResource();
-            return jedis.scard(key);
+            long sCard = jedis.scard(key);
+            // logger.info(String.valueOf(sCard));
+            return sCard;
         } catch (Exception e) {
             logger.error("jedis发生异常", e.getMessage());
         } finally {
@@ -261,6 +263,7 @@ public class JedisAdapter implements InitializingBean {
                 jedis.close();
             }
         }
+        // logger.info("执行到sCard的return0了");
         return 0;
     }
 

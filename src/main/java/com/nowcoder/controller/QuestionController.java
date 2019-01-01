@@ -60,9 +60,10 @@ public class QuestionController {
             if (loggedInUser == null) {
                 liked = 0;
             } else {
-                liked = likeService.getLikeStatus(loggedInUser.getId(), comment.getEntityTypeEnum(), comment.getEntityId());
+                liked = likeService.getLikeStatus(loggedInUser.getId(), EntityType.COMMENT, comment.getId());
             }
-            long likeCount = likeService.getLikeCount(comment.getEntityTypeEnum(), comment.getEntityId());
+            long likeCount = likeService.getLikeCount(EntityType.COMMENT, comment.getId());
+            // logger.info(String.valueOf(likeCount));
             viewObject.set("liked", liked);
             viewObject.set("likeCount", likeCount);
 

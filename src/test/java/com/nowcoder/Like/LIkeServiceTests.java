@@ -35,6 +35,5 @@ public class LIkeServiceTests {
             Assert.assertTrue(likeService.getLikeCount(EntityType.COMMENT, entityId) > 0);
         }
         System.out.println(likeService.getLikeCount(EntityType.COMMENT, 2));
-
     }
 }

@@ -30,7 +30,7 @@ public class LogAspect {
         for (Object arg : joinPoint.getArgs()) {
             sb.append("arg:" + arg.toString() + "|");
         }
-        logger.info("before method:" + sb.toString());
+        // logger.info("before method:" + sb.toString());
     }
 
     @After("execution(* com.nowcoder.controller.IndexController.*(..))")
