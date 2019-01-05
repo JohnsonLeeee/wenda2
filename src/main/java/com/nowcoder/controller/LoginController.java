@@ -1,5 +1,8 @@
 package com.nowcoder.controller;
 
+import com.nowcoder.async.EventModel;
+import com.nowcoder.async.EventProducer;
+import com.nowcoder.async.EventType;
 import com.nowcoder.service.UserService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -37,6 +40,9 @@ public class LoginController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    EventProducer eventProducer;
 
     @RequestMapping(path = "/reg", method = {RequestMethod.POST})
     public String reg(Model model,
@@ -86,16 +92,28 @@ public class LoginController {
     public String login(Model model,
                         @RequestParam("username") String username,
                         @RequestParam("password") String password,
-                        @RequestParam(value = "rememberme", defaultValue = "false") boolean rememberme,
+                        @RequestParam(value = "rememberme", defaultValue = "false") boolean rememberMe,
                         @RequestParam(value = "next", defaultValue = "/") String next,
                         HttpServletResponse response) {
         try {
-            Map<String, String> map = userService.login(username, username);
+            Map<String, Object> map = userService.login(username, password);
             if (map.containsKey("ticket")) {
-                Cookie cookie = new Cookie("ticket", map.get("ticket"));
+                Cookie cookie = new Cookie("ticket", map.get("ticket").toString());
                 // cookie.setPath的用法
                 cookie.setPath("/");
+
+                if (rememberMe) {
+                    cookie.setMaxAge(3600 * 24 * 5);
+                }
+
                 response.addCookie(cookie);
+
+                // 登录后把一个登录事件添加到阻塞队列中
+                eventProducer.fireEvent(new EventModel(EventType.LOGIN)
+                        .setExts("username", username)
+                        .setExts("email", "13122386386@163.com")
+                        .setActorId((int)map.get("userId"))
+                );
 
                 return "redirect:" + next;
 

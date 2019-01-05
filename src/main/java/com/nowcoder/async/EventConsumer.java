@@ -23,6 +23,10 @@ import java.util.Map;
  * @author: Li Shuai
  * @create: 2019-01-04 20:15
  **/
+// InitializingBean : spring初始化bean
+// 加上了@Component注解之后，spring会初始化该bean，
+// 如果该bean实现InitializingBean接口，并实afterPropertiesSet()方法，
+// 则spring会调用该方法
 @Service
 // ApplicationContextAware: Interface to be implemented by any object that wishes to be notified of the ApplicationContext that it runs in.
 public class EventConsumer implements InitializingBean, ApplicationContextAware {

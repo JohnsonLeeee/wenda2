@@ -79,8 +79,8 @@ public class UserService {
     }
 
 
-    public Map<String, String> login(String username, String password) {
-        Map<String, String> map = new HashMap<>();
+    public Map<String, Object> login(String username, String password) {
+        Map<String, Object> map = new HashMap<>();
         if (StringUtils.isBlank(username)) {
             map.put("msg", "用户名不能为空");
             return map;
@@ -104,6 +104,7 @@ public class UserService {
 
         String ticket = addLoginTicket(user.getId());
         map.put("ticket", ticket);
+        map.put("userId", user.getId());
 
         return map;
     }
