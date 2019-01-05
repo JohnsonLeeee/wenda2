@@ -60,4 +60,8 @@ public class CommentService {
     public boolean deleteComment(int commentId) {
         return commentDAO.updateComment(commentId, 1);
     }
+
+    public Comment getCommentById(int id) {
+        return commentDAO.getCommentById(id);
+    }
 }

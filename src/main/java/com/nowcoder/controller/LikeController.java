@@ -1,7 +1,12 @@
 package com.nowcoder.controller;
 
+import com.nowcoder.async.EventModel;
+import com.nowcoder.async.EventProducer;
+import com.nowcoder.async.EventType;
+import com.nowcoder.model.Comment;
 import com.nowcoder.model.EntityType;
 import com.nowcoder.model.HostHolder;
+import com.nowcoder.service.CommentService;
 import com.nowcoder.service.LikeService;
 import com.nowcoder.util.WendaUtil;
 import org.slf4j.Logger;
@@ -29,12 +34,31 @@ public class LikeController {
     @Autowired
     LikeService likeService;
 
+    @Autowired
+    EventProducer eventProducer;
+
+    @Autowired
+    CommentService commentService;
+
     @RequestMapping(path = {"/like"}, method = {RequestMethod.POST})
     @ResponseBody
     public String like(@RequestParam("commentId") int commentId) {
+        // 边界测试，查看是否登录
         if (hostHolder.getUser() == null) {
             return WendaUtil.getJSONString(999, "未登录");
         }
+
+        // 将新的事件放入eventProducer,异步执行发送私信功能。
+        Comment comment = commentService.getCommentById(commentId);
+        eventProducer.fireEvent(new EventModel(EventType.LIKE)
+                .setActorId(hostHolder.getUser().getId())
+                .setEntityOwnerId(comment.getUserId())
+                .setEntityId(commentId)
+                .setEntityType(EntityType.COMMENT)
+                .setExts("questionId", String.valueOf(comment.getEntityId()))
+        );
+
+        // 执行点赞，并获得点赞数
         long likeCount = likeService.like(hostHolder.getUser().getId(), EntityType.COMMENT, commentId);
         return WendaUtil.getJSONString(0, String.valueOf(likeCount));
     }
@@ -45,6 +69,7 @@ public class LikeController {
         if (hostHolder.getUser() == null) {
             return WendaUtil.getJSONString(999, "未登录");
         }
+        // 执行踩
         long likeCount = likeService.disLike(hostHolder.getUser().getId(), EntityType.COMMENT, commentId);
         return WendaUtil.getJSONString(0, String.valueOf(likeCount));
     }

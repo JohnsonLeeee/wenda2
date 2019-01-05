@@ -11,6 +11,8 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Tuple;
 
+import java.util.List;
+
 /**
  * @program: wenda
  * @description: Redis
@@ -225,7 +227,7 @@ public class JedisAdapter implements InitializingBean {
             jedis = pool.getResource();
             return jedis.sadd(key, value);
         } catch (Exception e) {
-            logger.error("jedis发生异常", e.getMessage());
+            logger.error("jedis.sAdd发生异常", e.getMessage());
         } finally {
             if (jedis != null) {
                 jedis.close();
@@ -240,7 +242,7 @@ public class JedisAdapter implements InitializingBean {
             jedis = pool.getResource();
             return jedis.srem(key, value);
         } catch (Exception e) {
-            logger.error("jedis发生异常", e.getMessage());
+            logger.error("jedis.sRem发生异常", e.getMessage());
         } finally {
             if (jedis != null) {
                 jedis.close();
@@ -253,11 +255,10 @@ public class JedisAdapter implements InitializingBean {
         Jedis jedis = null;
         try {
             jedis = pool.getResource();
-            long sCard = jedis.scard(key);
+            return jedis.scard(key);
             // logger.info(String.valueOf(sCard));
-            return sCard;
         } catch (Exception e) {
-            logger.error("jedis发生异常", e.getMessage());
+            logger.error("jedis.sCard发生异常", e.getMessage());
         } finally {
             if (jedis != null) {
                 jedis.close();
@@ -273,12 +274,42 @@ public class JedisAdapter implements InitializingBean {
             jedis = pool.getResource();
             return jedis.sismember(key, member);
         } catch (Exception e) {
-            logger.error("jedis发生异常", e.getMessage());
+            logger.error("jedis.sIsMember发生异常", e.getMessage());
         } finally {
             if (jedis != null) {
                 jedis.close();
             }
         }
         return false;
+    }
+
+    public long lPush(String key, String member) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.lpush(key, member);
+        } catch (Exception e) {
+            logger.error("jedis的LPush发生异常", e.getMessage());
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return 0;
+    }
+
+    public List<String> brpop(int timeout, String key) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.brpop(timeout, key);
+        } catch (Exception e) {
+            logger.error("jedis的brPop发生异常", e.getMessage());
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return null;
     }
 }

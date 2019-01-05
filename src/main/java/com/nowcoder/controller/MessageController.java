@@ -107,7 +107,7 @@ public class MessageController {
         }
 
         // 点进页面后，用户与联系人消息设置为已读。
-        if  (!messageService.setHasReadTrue(hostHolder.getUser().getId(), conversationId)) {
+        if (!messageService.setHasReadTrue(hostHolder.getUser().getId(), conversationId)) {
             logger.error("修改未读消息失败");
         }
 
