@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import javax.mail.MessagingException;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
@@ -35,7 +34,7 @@ public class MailSender implements InitializingBean {
 
     public boolean sendWithHTMLTemplate(String to, String subject, String template, Map<String, Object> model) {
         try {
-            String nick = MimeUtility.encodeText("李帅");
+            String nick = MimeUtility.encodeText("Wenda管理员");
             InternetAddress from = new InternetAddress(nick + "<1757670451@qq.com>");
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
@@ -64,7 +63,7 @@ public class MailSender implements InitializingBean {
         mailSender = new JavaMailSenderImpl();
         mailSender.setUsername("1757670451@qq.com");
         // qq邮箱的授权码
-        mailSender.setPassword("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+        mailSender.setPassword("reryntiglcmfciad");
         mailSender.setHost("smtp.qq.com");
         mailSender.setPort(465);
         mailSender.setDefaultEncoding("utf8");
