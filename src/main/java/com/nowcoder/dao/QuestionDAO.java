@@ -24,6 +24,13 @@ public interface QuestionDAO {
             ") values (#{title},#{content},#{createdDate},#{userId},#{commentCount})"})
     int addQuestion(Question question);
 
+    /**
+     *  返回question的list
+     * @param userId 0表示首页的无差别内容;其他数字表示userId
+     * @param offset offset
+     * @param limit limit
+     * @return List<Question>
+     */
     List<Question> selectLatestQuestions(@Param("userId") int userId, @Param("offset") int offset,
                                          @Param("limit") int limit);
 

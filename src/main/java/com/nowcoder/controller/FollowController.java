@@ -201,7 +201,7 @@ public class FollowController {
             // vo.set("commentCount", )
             vo.set("followerCount", followService.getFollowerCount(EntityType.USER, userId));
             vo.set("followeeCount", followService.getFolloweeCount(userId, EntityType.USER));
-            vo.set("commentCount", commentService.getCommentCountByUserId(userId, EntityType.QUESTION.getInt()));
+            vo.set("commentCount", commentService.getAnswerCountByUserId(userId));
             vo.set("likeCount", likeService.getAllAnswerLikeCountByUserId(userId));
             if (localUserId != 0) {
                 vo.set("followed", followService.isFollower(localUserId, EntityType.USER, userId));

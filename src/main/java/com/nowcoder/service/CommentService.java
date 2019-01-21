@@ -56,7 +56,12 @@ public class CommentService {
     }
 
     public int getCommentCountByUserId(int userId, int entityType) {
+        // entitytype为question,表示回答数
         return commentDAO.getCommentCountByUserId(userId, entityType);
+    }
+
+    public int getAnswerCountByUserId(int userId) {
+        return commentDAO.getCommentCountByUserId(userId, EntityType.QUESTION.getInt());
     }
 
     public boolean deleteComment(int commentId) {

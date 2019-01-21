@@ -1,9 +1,7 @@
 package com.nowcoder.controller;
 
-import com.nowcoder.model.Question;
-import com.nowcoder.model.ViewObject;
-import com.nowcoder.service.QuestionService;
-import com.nowcoder.service.UserService;
+import com.nowcoder.model.*;
+import com.nowcoder.service.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,6 +28,14 @@ public class HomeController {
     UserService userService;
     @Autowired
     QuestionService questionService;
+    @Autowired
+    FollowService followService;
+    @Autowired
+    CommentService commentService;
+    @Autowired
+    LikeService likeService;
+    @Autowired
+    HostHolder hostHolder;
 
     @RequestMapping(path = {"/"}, method = {RequestMethod.GET})
     public String home(Model model) {
@@ -40,9 +46,21 @@ public class HomeController {
 
     @RequestMapping(path = {"user/{userId}"}, method = {RequestMethod.GET})
     public String user(Model model, @PathVariable("userId") int userId) {
-        List<ViewObject> vos = getQuestion(userId,0,1);
+        // 个人主页详情
+        ViewObject viewObject = new ViewObject();
+        viewObject.set("user", userService.getUser(userId));
+        viewObject.set("followerCount", followService.getFollowerCount(EntityType.USER, userId));
+        viewObject.set("followeeCount", followService.getFolloweeCount(userId, EntityType.USER));
+        viewObject.set("answerCount", commentService.getAnswerCountByUserId(userId));
+        viewObject.set("likeCount", likeService.getAllAnswerLikeCountByUserId(userId));
+        viewObject.set("followed", followService.isFollower(hostHolder.getUser().getId(), EntityType.USER, userId));
+        model.addAttribute("profileUser", viewObject);
+
+        // 最新动态
+        List<ViewObject> vos = getQuestion(userId, 0, 10);
         model.addAttribute("vos", vos);
-        return "index";
+
+        return "profile";
     }
 
     private List<ViewObject> getQuestion(int userId, int offset, int limit) {
@@ -52,6 +70,7 @@ public class HomeController {
             ViewObject vo = new ViewObject();
             vo.set("question", question);
             vo.set("user", userService.getUser(question.getUserId()));
+            vo.set("followCount", followService.getFollowerCount(EntityType.QUESTION, userId));
             vos.add(vo);
         }
         return vos;

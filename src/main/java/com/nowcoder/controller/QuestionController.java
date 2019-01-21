@@ -1,10 +1,7 @@
 package com.nowcoder.controller;
 
 import com.nowcoder.model.*;
-import com.nowcoder.service.CommentService;
-import com.nowcoder.service.LikeService;
-import com.nowcoder.service.QuestionService;
-import com.nowcoder.service.UserService;
+import com.nowcoder.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +36,8 @@ public class QuestionController {
     CommentService commentService;
     @Autowired
     LikeService likeService;
+    @Autowired
+    FollowService followService;
 
     @RequestMapping(path = {"/question/{qid}"}, method = {RequestMethod.GET})
     public String questionDetail(@PathVariable("qid") int qid,
@@ -77,6 +76,7 @@ public class QuestionController {
         // 添加问题栏
         model.addAttribute("question", question);
         model.addAttribute("loggedInUser", loggedInUser);
+        model.addAttribute("followCount", followService.getFollowerCount(EntityType.QUESTION, question.getId()));
         // 添加回答栏
         model.addAttribute("comments", vos);
 

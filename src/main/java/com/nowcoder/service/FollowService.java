@@ -132,9 +132,14 @@ public class FollowService {
         return getIdsFromSet(jedisAdapter.zRevRange(followeeKey, offset, count));
     }
 
-    // 我关注的人的数量
-    public long getFolloweeCount(int userId, EntityType entityType) {
-        final String followeeKey = RedisKeyUtil.getFolloweeKey(userId, entityType);
+    /**
+     * 我关注的人的数量
+     * @param MyUserId 我的userId
+     * @param entityType 我关注的类型：QUESTION/USER/COMMENT
+     * @return
+     */
+    public long getFolloweeCount(int MyUserId, EntityType entityType) {
+        final String followeeKey = RedisKeyUtil.getFolloweeKey(MyUserId, entityType);
         return jedisAdapter.zCard(followeeKey);
     }
 

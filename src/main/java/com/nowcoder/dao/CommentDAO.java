@@ -50,6 +50,12 @@ public interface CommentDAO {
             " WHERE entity_id=#{entityId} and entity_type=#{entityType}"})
     int getCommentCountByEntityId(@Param("entityId") int entityId, @Param("entityType") int entityType);
 
+    /**
+     * entitytype为Question时，为回答数；某人评论QUESTION/COMMNET的数量;
+     * @param userId 某人
+     * @param entityType QUESTION/USER
+     * @return 回答数
+     */
     @Select({"select count(id) from", TABLE_NAME,
             " WHERE user_id=#{userId} and entity_type=#{entityType}"})
     int getCommentCountByUserId(@Param("userId") int userId, @Param("entityType")int entityType);

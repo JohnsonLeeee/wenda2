@@ -15,7 +15,7 @@
                         #foreach($vo in $vos)
                         <div class="feed-item folding feed-item-hook feed-item-5
                         " feed-item-a="" data-type="a" id="feed-5" data-za-module="FeedItem" data-za-index="">
-                            <meta itemprop="ZReactor" data-id="2721435" data-meta="{&quot;source_type&quot;: &quot;promotion_answer&quot;, &quot;voteups&quot;: 2517, &quot;comments&quot;: 471, &quot;source&quot;: []}">
+                            <meta itemprop="ZReactor" data-id="2721435" data-meta="{&quot;source_type&quot;: &quot;promotion_answer&quot;, &quot;voteups&quot;: ${vo.followCount}, &quot;comments&quot;: 471, &quot;source&quot;: []}">
                             <div class="feed-item-inner">
                                 <div class="avatar">
                                     <a title="${vo.user.name}" data-tip="p$t$jtlvcn" class="zm-item-link-avatar" target="_blank" href="https://nowcoder.com/people/jtlvcn">
@@ -35,7 +35,7 @@
                                             <meta itemprop="answer-id" content="2721435">
                                             <meta itemprop="answer-url-token" content="18864677"> -->
                                             <div class="zm-item-vote">
-                                                <a class="zm-item-vote-count js-expand js-vote-count" href="javascript:;" data-bind-votecount="">2517</a></div>
+                                                <a class="zm-item-vote-count js-expand js-vote-count" href="javascript:;" data-bind-votecount="">${vo.followCount}</a></div>
                                             <div class="zm-votebar" data-za-module="VoteBar">
                                                 <button class="up" aria-pressed="false" title="赞同">
                                                     <i class="icon vote-arrow"></i>
@@ -48,10 +48,10 @@
                                             <div class="zm-item-answer-author-info">
                                                 <a class="author-link" data-tip="p$t$jtlvcn" target="_blank" href="/user/${vo.user.id}">${vo.user.name}</a>
                                                 <span title="半血复活ing..." class="bio">，颓废girl....杨天哥哥小迷妹</span></div>
-                                            <div class="zm-item-vote-info" data-votecount="2517" data-za-module="VoteInfo">
+                                            <div class="zm-item-vote-info" data-votecount="${vo.followCount}" data-za-module="VoteInfo">
                                                 <span class="voters text">
                                                     <a href="#" class="more text">
-                                                        <span class="js-voteCount">2517</span>&nbsp;人赞同</a></span>
+                                                        <span class="js-voteCount">${vo.followCount}</span>&nbsp;人赞同</a></span>
                                             </div>
                                             <div class="zm-item-rich-text expandable js-collapse-body" data-resourceid="838079" data-action="/answer/content" data-author-name="吕剑霆" data-entry-url="/question/21643389/answer/18864677">
                                                 <div class="zh-summary summary clearfix">$!{vo.question.content}</div>
