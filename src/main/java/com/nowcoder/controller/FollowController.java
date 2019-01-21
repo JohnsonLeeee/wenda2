@@ -4,10 +4,7 @@ import com.nowcoder.async.EventModel;
 import com.nowcoder.async.EventProducer;
 import com.nowcoder.async.EventType;
 import com.nowcoder.model.*;
-import com.nowcoder.service.CommentService;
-import com.nowcoder.service.FollowService;
-import com.nowcoder.service.QuestionService;
-import com.nowcoder.service.UserService;
+import com.nowcoder.service.*;
 import com.nowcoder.util.WendaUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +41,9 @@ public class FollowController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    LikeService likeService;
 
     @Autowired
     HostHolder hostHolder;
@@ -202,6 +202,7 @@ public class FollowController {
             vo.set("followerCount", followService.getFollowerCount(EntityType.USER, userId));
             vo.set("followeeCount", followService.getFolloweeCount(userId, EntityType.USER));
             vo.set("commentCount", commentService.getCommentCountByUserId(userId, EntityType.QUESTION.getInt()));
+            vo.set("likeCount", likeService.getAllAnswerLikeCountByUserId(userId));
             if (localUserId != 0) {
                 vo.set("followed", followService.isFollower(localUserId, EntityType.USER, userId));
             } else {

@@ -24,6 +24,12 @@ public class RedisKeyUtil {
     private static final String BIZ_TIMELINE = "TIMELINE";
 
 
+    /**
+     *
+     * @param entityType 被点赞的实体的类型，目前必须是comment; QUESTION和USER不可被点赞
+     * @param entityId comment的id
+     * @return Redis中存储点赞的set的键
+     */
     public static String getLikeKey(EntityType entityType, int entityId) {
         // 这里注意BIZ_LIKE是否加final的区别，如果不加final，在这里可更改，加上final后，就不可更改了。
 //        BIZ_LIKE = "LIKE";
