@@ -2,8 +2,10 @@ package com.nowcoder;
 
 import com.nowcoder.dao.QuestionDAO;
 import com.nowcoder.dao.UserDAO;
+import com.nowcoder.model.EntityType;
 import com.nowcoder.model.Question;
 import com.nowcoder.model.User;
+import com.nowcoder.service.FollowService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.security.MessageDigest;
+import java.util.Map;
 
 /**
  * @program: wenda
@@ -36,6 +37,15 @@ public class WendaUtil {
     public static String getJSONString(int code) {
         JSONObject json = new JSONObject();
         json.put("code", code);
+        return json.toJSONString();
+    }
+
+    public static String getJSONString(int code, Map<String, Object> map) {
+        JSONObject json = new JSONObject();
+        json.put("code", code);
+        for (Map.Entry<String, Object> entry : map.entrySet()){
+            json.put(entry.getKey(), entry.getValue());
+        }
         return json.toJSONString();
     }
 

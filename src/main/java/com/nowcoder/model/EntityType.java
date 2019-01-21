@@ -8,7 +8,7 @@ package com.nowcoder.model;
  **/
 
 public enum EntityType {
-    QUESTION(1), COMMENT(2);
+    QUESTION(1), COMMENT(2), USER(3);
 
     private int abbr;
 

@@ -10,13 +10,24 @@ import com.nowcoder.model.EntityType;
  **/
 
 public class RedisKeyUtil {
-    private static String SPLIT = ":";
-    private static String BIZ_LIKE = "LIKE";
-    private static String BIZ_DISLIKE = "DISLIKE";
-    private static String BIZ_EVENT_QUEUE = "EVENT_QUEUE";
+    // final修饰的属性表明是一个常数（创建后不能被修改）。
+    private static final String SPLIT = ":";
+    private static final String BIZ_LIKE = "LIKE";
+    private static final String BIZ_DISLIKE = "DISLIKE";
+    private static final String BIZ_EVENT_QUEUE = "EVENT_QUEUE";
+
+    // 粉丝
+    private static final String BIZ_FOLLOWER = "FOLLOWER";
+    // 被关注对象
+    private static final String BIZ_FOLLOWEE = "FOLLOWEE";
+
+    private static final String BIZ_TIMELINE = "TIMELINE";
 
 
     public static String getLikeKey(EntityType entityType, int entityId) {
+        // 这里注意BIZ_LIKE是否加final的区别，如果不加final，在这里可更改，加上final后，就不可更改了。
+//        BIZ_LIKE = "LIKE";
+//        BIZ_DISLIKE = "DISLIKE";
         return BIZ_LIKE + SPLIT + entityType + SPLIT + entityId;
     }
 
@@ -26,6 +37,14 @@ public class RedisKeyUtil {
 
     public static String getEventQueueKey() {
         return BIZ_EVENT_QUEUE;
+    }
+
+    public static String getFollowerKey(EntityType entityType, int entityId) {
+        return BIZ_FOLLOWER + SPLIT + entityType + SPLIT + entityId;
+    }
+
+    public static String getFolloweeKey(int userId, EntityType entityType) {
+        return BIZ_FOLLOWEE + SPLIT + userId + SPLIT + entityType;
     }
 
 }

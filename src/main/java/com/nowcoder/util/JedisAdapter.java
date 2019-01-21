@@ -6,12 +6,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
-import redis.clients.jedis.BinaryClient;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.Tuple;
+import redis.clients.jedis.*;
+import redis.clients.jedis.exceptions.JedisDataException;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @program: wenda
@@ -35,7 +35,7 @@ public class JedisAdapter implements InitializingBean {
         // 删掉本数据库
         // jedis.flushAll()删掉所有数据库
         jedis.flushDB();
-        jedis.set("Brother Day","good man");
+        jedis.set("Brother Day", "good man");
         print(1, jedis.get("Brother Day"));
         // 重命名
         jedis.rename("Brother Day", "Day");
@@ -57,7 +57,7 @@ public class JedisAdapter implements InitializingBean {
         print(2, jedis.get("pv"));
 
         // keys，取出所有keys
-        print(3,jedis.keys("*"));
+        print(3, jedis.keys("*"));
 
         // list
         String list = "list";
@@ -66,8 +66,8 @@ public class JedisAdapter implements InitializingBean {
             jedis.lpush(list, "a" + i);
         }
         // list取出jedis.lrange
-        print(4, jedis.lrange("list", 0,10));
-        print(4, jedis.lrange("list",0,4));
+        print(4, jedis.lrange("list", 0, 10));
+        print(4, jedis.lrange("list", 0, 4));
 
         // list 弹出一个值
         print(5, jedis.lpop("list"));
@@ -88,12 +88,12 @@ public class JedisAdapter implements InitializingBean {
         jedis.hset(user, "name", "Jim");
         jedis.hset(user, "age", "14");
         // 类似containKey
-        print(9, jedis.hexists(user,"age"));
+        print(9, jedis.hexists(user, "age"));
         print(10, jedis.hget(user, "name"));
         print(11, jedis.hgetAll(user));
         print(12, jedis.hincrBy(user, "age", 10));
         print(12, jedis.hgetAll(user));
-        print(13, jedis.hdel(user,"name"));
+        print(13, jedis.hdel(user, "name"));
         //遍历keys 和 vals
         print(14, jedis.hkeys(user));
         print(15, jedis.hvals(user));
@@ -107,7 +107,7 @@ public class JedisAdapter implements InitializingBean {
         String likeKey2 = "commentLike2";
         for (int i = 0; i < 10; i++) {
             jedis.sadd(likeKey1, String.valueOf(i));
-            jedis.sadd(likeKey2, String.valueOf(i*i));
+            jedis.sadd(likeKey2, String.valueOf(i * i));
         }
         // 取出集合的成员
         print(17, jedis.smembers(likeKey1));
@@ -120,7 +120,7 @@ public class JedisAdapter implements InitializingBean {
         // 求并
         print(20, jedis.sunion(likeKey1, likeKey2));
         // 求有没有16这个对象
-        print(21, jedis.sismember(likeKey1,"16"));
+        print(21, jedis.sismember(likeKey1, "16"));
         // 删掉5
         jedis.srem(likeKey1, "5");
         print(22, jedis.smembers(likeKey1));
@@ -305,6 +305,119 @@ public class JedisAdapter implements InitializingBean {
             return jedis.brpop(timeout, key);
         } catch (Exception e) {
             logger.error("jedis的brPop发生异常", e.getMessage());
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return null;
+    }
+
+
+    // 事务的开始和执行
+    public Jedis getJedis() {
+        return pool.getResource();
+    }
+
+    public Transaction multi(Jedis jedis) {
+        try {
+            return jedis.multi();
+        } catch (Exception e) {
+            logger.error("jedis.getJedis()出错");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<Object> exec(Transaction tx, Jedis jedis) {
+        try {
+            return tx.exec();
+        } catch (Exception e) {
+            logger.error("jedis.exec()出错");
+            e.printStackTrace();
+        } finally {
+            if (tx != null) {
+                try {
+                    tx.close();
+                } catch (IOException e) {
+                    logger.error("tx.close()出错");
+                    e.printStackTrace();
+                }
+            }
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return null;
+    }
+
+    public long zAdd(String key, double score, String value) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.zadd(key, score, value);
+        } catch (Exception e) {
+            logger.error("jedis.zAdd发生异常", e.getMessage());
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return 0;
+    }
+
+    public Set<String> zRevRange(String key, long start, long end) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.zrevrange(key, start, end);
+        } catch (Exception e) {
+            logger.error("jedis.zRevRange发生异常", e.getMessage());
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return null;
+    }
+
+    public Set<String> zRange(String key, long start, long end) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.zrange(key, start, end);
+        } catch (Exception e) {
+            logger.error("jedis.zRange发生异常", e.getMessage());
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return null;
+    }
+
+    public long zCard(String key) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.zcard(key);
+        } catch (Exception e) {
+            logger.error("jedis.zCard发生异常", e.getMessage());
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return 0;
+    }
+
+    public Double zScore(String key, String member) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.zscore(key, member);
+        } catch (Exception e) {
+            logger.error("jedis.zScore发生异常", e.getMessage());
         } finally {
             if (jedis != null) {
                 jedis.close();

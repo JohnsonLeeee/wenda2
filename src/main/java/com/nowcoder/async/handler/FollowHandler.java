@@ -3,6 +3,7 @@ package com.nowcoder.async.handler;
 import com.nowcoder.async.EventHandler;
 import com.nowcoder.async.EventModel;
 import com.nowcoder.async.EventType;
+import com.nowcoder.model.EntityType;
 import com.nowcoder.model.Message;
 import com.nowcoder.model.User;
 import com.nowcoder.service.MessageService;
@@ -11,18 +12,19 @@ import com.nowcoder.util.WendaUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 /**
  * @program: wenda
- * @description: 用户点赞，给其发站内信
+ * @description: 用户被关注，发站内信
  * @author: Li Shuai
- * @create: 2019-01-04 22:27
+ * @create: 2019-01-08 16:44
  **/
 @Component
-public class LikeHandler implements EventHandler {
+public class FollowHandler implements EventHandler {
     @Autowired
     MessageService messageService;
     @Autowired
@@ -30,7 +32,7 @@ public class LikeHandler implements EventHandler {
 
     @Override
     public List<EventType> getSupportEventTypes() {
-        return Arrays.asList(EventType.LIKE);
+        return Arrays.asList(EventType.FOLLOW, EventType.UNFOLLOW);
     }
 
     @Override
@@ -41,10 +43,14 @@ public class LikeHandler implements EventHandler {
         message.setCreatedDate(new Date());
         message.setConversationId(WendaUtil.SYSTEM_USER_ID, model.getEntityOwnerId());
         User user = userService.getUser(model.getActorId());
-        message.setContent("用户" + user.getName() +
-                "赞了你的评论，http://127.0.0.1:8080/question/" + model.getExts("questionId"));
+        if (model.getEntityType() == EntityType.QUESTION) {
+            message.setContent("用户" + user.getName() +
+                    "关注了你的问题，http://127.0.0.1:8080/question/" + model.getEntityId());
+        } else if (model.getEntityType() == EntityType.USER) {
+            message.setContent("用户" + user.getName() +
+                    "关注了你，http://127.0.0.1:8080/userId/" + model.getActorId());
+        }
 
         messageService.addMessage(message);
-
     }
 }
