@@ -68,7 +68,7 @@ public class QuestionController {
             viewObject.set("likeCount", likeCount);
 
             // 添加评论的评论数量
-            int commentCount = commentService.getCommentCount(comment.getId(), EntityType.COMMENT.getAbbr());
+            int commentCount = commentService.getCommentCountByEntityId(comment.getId(), EntityType.COMMENT.getAbbr());
             viewObject.set("commentCount", commentCount);
 
             vos.add(viewObject);
