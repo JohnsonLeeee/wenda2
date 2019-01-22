@@ -60,9 +60,9 @@ public class FollowController {
         boolean result = followService.follow(hostHolder.getUser().getId(), EntityType.USER, followeeUserId);
         eventProducer.fireEvent(new EventModel(EventType.FOLLOW)
                 .setActorId(hostHolder.getUser().getId())
-                .setEntityId(followeeUserId)
-                .setEntityType(EntityType.USER)
-                .setEntityOwnerId(followeeUserId)
+                .setCarrierEntityId(followeeUserId)
+                .setCarrierEntityType(EntityType.USER)
+                .setCarrierEntityOwnerId(followeeUserId)
         );
 
         // 成功返回0， 失败返回1; 总共关注的人数
@@ -83,9 +83,9 @@ public class FollowController {
         boolean result = followService.unfollow(hostHolder.getUser().getId(), EntityType.USER, followeeUserId);
         eventProducer.fireEvent(new EventModel(EventType.UNFOLLOW)
                 .setActorId(hostHolder.getUser().getId())
-                .setEntityId(followeeUserId)
-                .setEntityType(EntityType.USER)
-                .setEntityOwnerId(followeeUserId)
+                .setCarrierEntityId(followeeUserId)
+                .setCarrierEntityType(EntityType.USER)
+                .setCarrierEntityOwnerId(followeeUserId)
         );
 
         // 成功返回0， 失败返回1; 总共关注的人数
@@ -97,13 +97,13 @@ public class FollowController {
     @RequestMapping(path = {"/followQuestion"}, method = {RequestMethod.POST})
     @ResponseBody
     public String followQuestion(@RequestParam("questionId") int questionId) {
-        logger.info("开始执行/followQuestion");
+        // logger.info("开始执行/followQuestion");
         if (hostHolder == null) {
             return WendaUtil.getJSONString(999);
         }
 
         // 防止用户直接调用底层代码，导致程序报错
-        Question question = questionService.selectQuestionById(questionId);
+        Question question = questionService.getQuestionById(questionId);
         if (question == null) {
             return WendaUtil.getJSONString(1, "问题不存在");
         }
@@ -111,9 +111,9 @@ public class FollowController {
         boolean result = followService.follow(hostHolder.getUser().getId(), EntityType.QUESTION, questionId);
         eventProducer.fireEvent(new EventModel(EventType.FOLLOW)
                 .setActorId(hostHolder.getUser().getId())
-                .setEntityId(questionId)
-                .setEntityType(EntityType.QUESTION)
-                .setEntityOwnerId(question.getUserId())
+                .setCarrierEntityId(questionId)
+                .setCarrierEntityType(EntityType.QUESTION)
+                .setCarrierEntityOwnerId(question.getUserId())
         );
 
         Map<String, Object> info = new HashMap<>();
@@ -131,13 +131,13 @@ public class FollowController {
     @RequestMapping(path = {"/unfollowQuestion"}, method = {RequestMethod.POST})
     @ResponseBody
     public String unfollowQuestion(@RequestParam("questionId") int questionId) {
-        logger.info("开始执行/unfollowQuestion");
+        // logger.info("开始执行/unfollowQuestion");
         if (hostHolder == null) {
             return WendaUtil.getJSONString(999);
         }
 
         // 防止用户直接调用底层代码，导致程序报错
-        Question question = questionService.selectQuestionById(questionId);
+        Question question = questionService.getQuestionById(questionId);
         if (question == null) {
             return WendaUtil.getJSONString(1, "问题不存在");
         }
@@ -145,9 +145,9 @@ public class FollowController {
         boolean result = followService.unfollow(hostHolder.getUser().getId(), EntityType.QUESTION, questionId);
         eventProducer.fireEvent(new EventModel(EventType.UNFOLLOW)
                 .setActorId(hostHolder.getUser().getId())
-                .setEntityId(questionId)
-                .setEntityType(EntityType.QUESTION)
-                .setEntityOwnerId(question.getUserId())
+                .setCarrierEntityId(questionId)
+                .setCarrierEntityType(EntityType.QUESTION)
+                .setCarrierEntityOwnerId(question.getUserId())
         );
 
         Map<String, Object> info = new HashMap<>();

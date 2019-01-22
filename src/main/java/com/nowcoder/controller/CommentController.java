@@ -1,5 +1,8 @@
 package com.nowcoder.controller;
 
+import com.nowcoder.async.EventModel;
+import com.nowcoder.async.EventProducer;
+import com.nowcoder.async.EventType;
 import com.nowcoder.model.Comment;
 import com.nowcoder.model.EntityType;
 import com.nowcoder.model.HostHolder;
@@ -36,6 +39,9 @@ public class CommentController {
     @Autowired
     QuestionService questionService;
 
+    @Autowired
+    EventProducer eventProducer;
+
     @RequestMapping(path = {"/addComment"}, method = {RequestMethod.POST})
     public String addComment(@RequestParam("questionId") int questionId,
                              @RequestParam("content") String content) {
@@ -55,10 +61,20 @@ public class CommentController {
             // 更新question表里的comment_count
             int count = commentService.getCommentCountByEntityId(comment.getEntityId(), comment.getEntityType());
             questionService.updateCommentCount(comment.getEntityId(), count);
+
+            // 将评论事件放入event队列
+            eventProducer.fireEvent(new EventModel(EventType.COMMENT)
+                    .setActorId(hostHolder.getUser().getId())
+                    .setCarrierEntityId(questionId)
+                    .setCarrierEntityType(EntityType.QUESTION)
+                    .setCarrierEntityOwnerId(questionService.getQuestionById(questionId).getUserId())
+            );
         } catch (Exception e) {
             logger.error("增加论评失败" + e.getMessage());
             e.printStackTrace();
         }
+
+
         return "redirect:/question/" + questionId;
     }
 

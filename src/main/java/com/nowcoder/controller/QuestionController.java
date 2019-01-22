@@ -43,7 +43,7 @@ public class QuestionController {
     public String questionDetail(@PathVariable("qid") int qid,
                                  Model model)  {
         // 获取问题内容
-        Question question = questionService.selectQuestionById(qid);
+        Question question = questionService.getQuestionById(qid);
         User loggedInUser = hostHolder.getUser();
 
         // 判断是否关注

@@ -69,11 +69,11 @@ public class UserService {
         user.setHeadUrl(String.format("http://images.nowcoder.com/head/%dt.png", new Random().nextInt(1000)));
         user.setPassword(WendaUtil.MD5(password+salt));
         userDAO.addUser(user);
-        logger.info("userDAO执行成功");
+        // logger.info("userDAO执行成功");
 
         String ticket = addLoginTicket(user.getId());
         map.put("ticket", ticket);
-        logger.info("addLoginTicket执行成功");
+        // logger.info("addLoginTicket执行成功");
 
         return map;
     }
@@ -111,7 +111,7 @@ public class UserService {
 
 
     public String addLoginTicket(int userId) {
-        logger.info("开始执行addLoginTicket");
+        // logger.info("开始执行addLoginTicket");
         LoginTicket loginTicket = new LoginTicket();
         loginTicket.setUserId(userId);
         Date now = new Date();
@@ -119,9 +119,9 @@ public class UserService {
         loginTicket.setExpired(now);
         loginTicket.setStatus(0);
         loginTicket.setTicket(UUID.randomUUID().toString().replaceAll("-", ""));
-        logger.info("即将执行loginTicketDAO.addTicket,loginTicket:" + loginTicket);
+        // logger.info("即将执行loginTicketDAO.addTicket,loginTicket:" + loginTicket);
         loginTicketDAO.addTicket(loginTicket);
-        logger.info("addLoginTicket执行结束");
+        // logger.info("addLoginTicket执行结束");
         return loginTicket.getTicket();
     }
 

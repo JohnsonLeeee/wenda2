@@ -52,9 +52,9 @@ public class LikeController {
         Comment comment = commentService.getCommentById(commentId);
         eventProducer.fireEvent(new EventModel(EventType.LIKE)
                 .setActorId(hostHolder.getUser().getId())
-                .setEntityOwnerId(comment.getUserId())
-                .setEntityId(commentId)
-                .setEntityType(EntityType.COMMENT)
+                .setCarrierEntityOwnerId(comment.getUserId())
+                .setCarrierEntityId(commentId)
+                .setCarrierEntityType(EntityType.COMMENT)
                 .setExts("questionId", String.valueOf(comment.getEntityId()))
         );
 

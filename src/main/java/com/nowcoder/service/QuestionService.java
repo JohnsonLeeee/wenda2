@@ -21,7 +21,7 @@ public class QuestionService {
     @Autowired
     MySensitiveService mySensitiveService;
 
-    public Question selectQuestionById(int questionId) {
+    public Question getQuestionById(int questionId) {
         return questionDAO.selectQuestionById(questionId);
     }
 

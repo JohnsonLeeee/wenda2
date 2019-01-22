@@ -12,7 +12,6 @@ import com.nowcoder.util.WendaUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.awt.*;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -39,14 +38,14 @@ public class FollowHandler implements EventHandler {
     public void doHandle(EventModel model) {
         Message message = new Message();
         message.setFromId(WendaUtil.SYSTEM_USER_ID);
-        message.setToId(model.getEntityOwnerId());
+        message.setToId(model.getCarrierEntityOwnerId());
         message.setCreatedDate(new Date());
-        message.setConversationId(WendaUtil.SYSTEM_USER_ID, model.getEntityOwnerId());
+        message.setConversationId(WendaUtil.SYSTEM_USER_ID, model.getCarrierEntityOwnerId());
         User user = userService.getUser(model.getActorId());
-        if (model.getEntityType() == EntityType.QUESTION) {
+        if (model.getCarrierEntityType() == EntityType.QUESTION) {
             message.setContent("用户" + user.getName() +
-                    "关注了你的问题，http://127.0.0.1:8080/question/" + model.getEntityId());
-        } else if (model.getEntityType() == EntityType.USER) {
+                    "关注了你的问题，http://127.0.0.1:8080/question/" + model.getCarrierEntityId());
+        } else if (model.getCarrierEntityType() == EntityType.USER) {
             message.setContent("用户" + user.getName() +
                     "关注了你，http://127.0.0.1:8080/userId/" + model.getActorId());
         }
