@@ -62,8 +62,8 @@ public class CommentController {
             int count = commentService.getCommentCountByEntityId(comment.getEntityId(), comment.getEntityType());
             questionService.updateCommentCount(comment.getEntityId(), count);
 
-            // 将评论事件放入event队列
-            eventProducer.fireEvent(new EventModel(EventType.COMMENT)
+            // 将回答问题事件放入event队列
+            eventProducer.fireEvent(new EventModel(EventType.ANSWER_QUESTION)
                     .setActorId(hostHolder.getUser().getId())
                     .setCarrierEntityId(questionId)
                     .setCarrierEntityType(EntityType.QUESTION)

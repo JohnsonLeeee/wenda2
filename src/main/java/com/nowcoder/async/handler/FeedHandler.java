@@ -54,7 +54,8 @@ public class FeedHandler implements EventHandler {
         map.put("userHead", actor.getHeadUrl());
         map.put("userName", actor.getName());
 
-        if (eventModel.getEventType() == EventType.COMMENT ||
+        // 如果关注了问题，或者回答了问题，把question的信息添加进feed.data里。
+        if (eventModel.getEventType() == EventType.ANSWER_QUESTION ||
                 (eventModel.getEventType() == EventType.FOLLOW &&
                         eventModel.getCarrierEntityType()== EntityType.QUESTION)) {
             Question question = questionService.getQuestionById(eventModel.getCarrierEntityId());
@@ -72,6 +73,7 @@ public class FeedHandler implements EventHandler {
 
     @Override
     public List<EventType> getSupportEventTypes() {
-        return Arrays.asList(EventType.COMMENT, EventType.FOLLOW);
+        return Arrays.asList(EventType.FOLLOW, EventType.ADD_QUESTION,
+                EventType.LIKE, EventType.ANSWER_QUESTION);
     }
 }
