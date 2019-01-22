@@ -42,8 +42,23 @@ public class QuestionController {
     @RequestMapping(path = {"/question/{qid}"}, method = {RequestMethod.GET})
     public String questionDetail(@PathVariable("qid") int qid,
                                  Model model)  {
+        // 获取问题内容
         Question question = questionService.selectQuestionById(qid);
         User loggedInUser = hostHolder.getUser();
+
+        // 判断是否关注
+        boolean followed = false;
+        if (loggedInUser != null) {
+            followed = followService.isFollower(loggedInUser.getId(), EntityType.QUESTION, qid);
+        }
+
+        // 添加关注此问题的人
+        List<Integer> followUserIds = followService.getFollowers(EntityType.QUESTION, qid, 0, 15);
+        List<User> followUsers = new ArrayList<>(15);
+        for (int id : followUserIds) {
+            followUsers.add(userService.getUser(id));
+        }
+
 
         List<Comment> comments = commentService.getCommentByEntity(question.getId(), EntityType.QUESTION);
         List<ViewObject> vos = new ArrayList<>();
@@ -75,8 +90,11 @@ public class QuestionController {
 
         // 添加问题栏
         model.addAttribute("question", question);
-        model.addAttribute("loggedInUser", loggedInUser);
+        // model.addAttribute("loggedInUser", loggedInUser);
+        model.addAttribute("followed", followed);
+        model.addAttribute("followUsers", followUsers);
         model.addAttribute("followCount", followService.getFollowerCount(EntityType.QUESTION, question.getId()));
+
         // 添加回答栏
         model.addAttribute("comments", vos);
 
