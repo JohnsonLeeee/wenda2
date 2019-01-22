@@ -1,10 +1,7 @@
 package com.nowcoder.controller;
 
 import com.nowcoder.model.*;
-import com.nowcoder.service.CommentService;
-import com.nowcoder.service.LikeService;
-import com.nowcoder.service.QuestionService;
-import com.nowcoder.service.UserService;
+import com.nowcoder.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,12 +36,29 @@ public class QuestionController {
     CommentService commentService;
     @Autowired
     LikeService likeService;
+    @Autowired
+    FollowService followService;
 
     @RequestMapping(path = {"/question/{qid}"}, method = {RequestMethod.GET})
     public String questionDetail(@PathVariable("qid") int qid,
                                  Model model)  {
+        // 获取问题内容
         Question question = questionService.selectQuestionById(qid);
         User loggedInUser = hostHolder.getUser();
+
+        // 判断是否关注
+        boolean followed = false;
+        if (loggedInUser != null) {
+            followed = followService.isFollower(loggedInUser.getId(), EntityType.QUESTION, qid);
+        }
+
+        // 添加关注此问题的人
+        List<Integer> followUserIds = followService.getFollowers(EntityType.QUESTION, qid, 0, 15);
+        List<User> followUsers = new ArrayList<>(15);
+        for (int id : followUserIds) {
+            followUsers.add(userService.getUser(id));
+        }
+
 
         List<Comment> comments = commentService.getCommentByEntity(question.getId(), EntityType.QUESTION);
         List<ViewObject> vos = new ArrayList<>();
@@ -62,13 +76,13 @@ public class QuestionController {
             } else {
                 liked = likeService.getLikeStatus(loggedInUser.getId(), EntityType.COMMENT, comment.getId());
             }
-            long likeCount = likeService.getLikeCount(EntityType.COMMENT, comment.getId());
+            long likeCount = likeService.getLikeCountByEntityId(EntityType.COMMENT, comment.getId());
             // logger.info(String.valueOf(likeCount));
             viewObject.set("liked", liked);
             viewObject.set("likeCount", likeCount);
 
             // 添加评论的评论数量
-            int commentCount = commentService.getCommentCount(comment.getId(), EntityType.COMMENT.getAbbr());
+            int commentCount = commentService.getCommentCountByEntityId(comment.getId(), EntityType.COMMENT.getAbbr());
             viewObject.set("commentCount", commentCount);
 
             vos.add(viewObject);
@@ -76,7 +90,11 @@ public class QuestionController {
 
         // 添加问题栏
         model.addAttribute("question", question);
-        model.addAttribute("loggedInUser", loggedInUser);
+        // model.addAttribute("loggedInUser", loggedInUser);
+        model.addAttribute("followed", followed);
+        model.addAttribute("followUsers", followUsers);
+        model.addAttribute("followCount", followService.getFollowerCount(EntityType.QUESTION, question.getId()));
+
         // 添加回答栏
         model.addAttribute("comments", vos);
 

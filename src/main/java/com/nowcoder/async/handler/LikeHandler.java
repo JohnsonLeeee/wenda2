@@ -27,6 +27,7 @@ public class LikeHandler implements EventHandler {
     MessageService messageService;
     @Autowired
     UserService userService;
+
     @Override
     public List<EventType> getSupportEventTypes() {
         return Arrays.asList(EventType.LIKE);

@@ -13,11 +13,16 @@ import java.util.Map;
  **/
 
 public class EventModel {
+    // 事件类型
     private EventType eventType;
+    // 触发者的id
     private int actorId;
+    // 被触发载体的type和id
     private EntityType entityType;
     private int entityId;
+    // 拥有这个entity的id，比如点赞后异步发送邮件给被点赞的评论的作者
     private int entityOwnerId;
+    // 其他需要添加的信息
     private Map<String, String> exts = new HashMap<>();
 
     public EventModel() {}

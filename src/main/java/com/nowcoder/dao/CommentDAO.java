@@ -41,14 +41,24 @@ public interface CommentDAO {
     List<Comment> selectByEntity(@Param("entityId") int entityId, @Param("entityType") int entityType);
 
     /**
-     *
+     * 选出某个QUESTION/COMMENT下所有的comment
      * @param entityId 实体的id，比如question，comment的id
      * @param entityType 实体类型，question,comment等
      * @return 返回相关问题/评论下comment的数量
      */
     @Select({" select count(id) from ", TABLE_NAME,
             " WHERE entity_id=#{entityId} and entity_type=#{entityType}"})
-    int getCommentCount(@Param("entityId") int entityId, @Param("entityType") int entityType);
+    int getCommentCountByEntityId(@Param("entityId") int entityId, @Param("entityType") int entityType);
+
+    /**
+     * entitytype为Question时，为回答数；某人评论QUESTION/COMMNET的数量;
+     * @param userId 某人
+     * @param entityType QUESTION/USER
+     * @return 回答数
+     */
+    @Select({"select count(id) from", TABLE_NAME,
+            " WHERE user_id=#{userId} and entity_type=#{entityType}"})
+    int getCommentCountByUserId(@Param("userId") int userId, @Param("entityType")int entityType);
 
     /**
      *
@@ -61,4 +71,23 @@ public interface CommentDAO {
 
     @Select({"select ", SELECT_FIELDS, "FROM", TABLE_NAME, "where id=#{id}"})
     Comment getCommentById(int id);
+
+    /**
+     *  根据userId和EntityType选出所有的Comment
+     * @param userId userId
+     * @param entityType entityType
+     * @return List<Comment>所有的comment
+     */
+    @Select({"select", SELECT_FIELDS, "FROM", TABLE_NAME,
+            "where user_id=#{userId} and entity_type=#{entityType} limit #{offset}, #{limit}"})
+    List<Comment> getCommentPagesByUserId(@Param("userId") int userId, @Param("entityType") int entityType,
+                                      @Param("offset") int offset, @Param("limit") int limit);
+
+    @Select({"select", SELECT_FIELDS, "FROM", TABLE_NAME,
+            "where user_id=#{userId} and entity_type=#{entityType}"})
+    List<Comment> getCommentsByUserId(@Param("userId") int userId, @Param("entityType") int entityType);
+
+    @Select({"SELECT id FROM", TABLE_NAME,
+            "WHERE user_id=#{userId} AND entity_type=#{entityType}"})
+    List<Integer> getCommentIdsByUserId(@Param("userId") int userId, @Param("entityType") int entityType);
 }

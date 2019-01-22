@@ -53,7 +53,7 @@ public class CommentController {
             commentService.addComment(comment);
 
             // 更新question表里的comment_count
-            int count = commentService.getCommentCount(comment.getEntityId(), comment.getEntityType());
+            int count = commentService.getCommentCountByEntityId(comment.getEntityId(), comment.getEntityType());
             questionService.updateCommentCount(comment.getEntityId(), count);
         } catch (Exception e) {
             logger.error("增加论评失败" + e.getMessage());

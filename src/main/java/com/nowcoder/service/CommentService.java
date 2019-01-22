@@ -1,12 +1,10 @@
 package com.nowcoder.service;
 
 import com.nowcoder.dao.CommentDAO;
-import com.nowcoder.dao.QuestionDAO;
 import com.nowcoder.model.Comment;
 import com.nowcoder.model.EntityType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.util.HtmlUtils;
 
 import java.util.List;
@@ -53,8 +51,17 @@ public class CommentService {
 
     }
 
-    public int getCommentCount(int entityId, int entityType) {
-        return commentDAO.getCommentCount(entityId, entityType);
+    public int getCommentCountByEntityId(int entityId, int entityType) {
+        return commentDAO.getCommentCountByEntityId(entityId, entityType);
+    }
+
+    public int getCommentCountByUserId(int userId, int entityType) {
+        // entitytype为question,表示回答数
+        return commentDAO.getCommentCountByUserId(userId, entityType);
+    }
+
+    public int getAnswerCountByUserId(int userId) {
+        return commentDAO.getCommentCountByUserId(userId, EntityType.QUESTION.getInt());
     }
 
     public boolean deleteComment(int commentId) {

@@ -32,8 +32,8 @@ public class LIkeServiceTests {
             for (int userId = 0; userId < 10; userId++) {
                 likeService.like(userId, EntityType.COMMENT, entityId);
             }
-            Assert.assertTrue(likeService.getLikeCount(EntityType.COMMENT, entityId) > 0);
+            Assert.assertTrue(likeService.getLikeCountByEntityId(EntityType.COMMENT, entityId) > 0);
         }
-        System.out.println(likeService.getLikeCount(EntityType.COMMENT, 2));
+        System.out.println(likeService.getLikeCountByEntityId(EntityType.COMMENT, 2));
     }
 }
