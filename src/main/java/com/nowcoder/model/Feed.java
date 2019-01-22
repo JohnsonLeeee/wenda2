@@ -1,5 +1,7 @@
 package com.nowcoder.model;
 
+import com.alibaba.fastjson.JSONObject;
+
 import java.util.Date;
 
 /**
@@ -16,6 +18,8 @@ public class Feed {
     private Date createdDate;
     // json
     private String data;
+
+    private JSONObject dataJSON;
 
     public int getId() {
         return id;
@@ -55,5 +59,13 @@ public class Feed {
 
     public void setData(String data) {
         this.data = data;
+        dataJSON = JSONObject.parseObject(data);
+    }
+
+
+    // issue : 这里用get是为了在velocity中使用.进行引用，因为velocity 自动引用带
+    // get、is的方法
+    public String get(String key) {
+        return dataJSON == null ? null : dataJSON.getString(key);
     }
 }
