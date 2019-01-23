@@ -5,6 +5,8 @@ import com.nowcoder.model.Feed;
 import com.nowcoder.model.HostHolder;
 import com.nowcoder.service.FeedService;
 import com.nowcoder.service.FollowService;
+import com.nowcoder.util.JedisAdapter;
+import com.nowcoder.util.RedisKeyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +30,8 @@ public class FeedController {
     HostHolder hostHolder;
     @Autowired
     FollowService followService;
+    @Autowired
+    JedisAdapter jedisAdapter;
 
     @RequestMapping(path = {"/pullfeeds"}, method = {RequestMethod.GET})
     public String getPullFeeds(Model model) {
@@ -37,6 +41,30 @@ public class FeedController {
 
         if (localUserId != 0) {
             feeds = feedService.getUserFeeds(Integer.MAX_VALUE, followeeIds, 20);
+        }
+        model.addAttribute("feeds", feeds);
+
+        return "feeds";
+    }
+
+    /*
+    pull和push区别，假设A关注B，B发动态后，push到A的timelineRedis中；
+    当A不再关注B，A的pullfeeds将不再显示B的动态；
+    而pushfeeds仍然显示B的刚才那条动态，因为已经push进入A的timeline了。
+     */
+
+    // todo : unfollow后，把相关feed从redis删除
+    @RequestMapping(path = {"/pushfeeds"}, method = {RequestMethod.GET})
+    public String getPushFeeds(Model model) {
+        int localUserId = hostHolder.getUser() == null ? 0 : hostHolder.getUser().getId();
+        List<String> feedIds = jedisAdapter.lRange(RedisKeyUtil.getTimelineKey(localUserId), 0, 20);
+        List<Feed> feeds = new ArrayList<>(20);
+        for (String id : feedIds) {
+            Feed feed = feedService.getFeedById(Integer.parseInt(id));
+            if (feed == null) {
+                continue;
+            }
+            feeds.add(feed);
         }
         model.addAttribute("feeds", feeds);
 
