@@ -65,6 +65,11 @@ public class Feed {
 
     // issue : 这里用get是为了在velocity中使用.进行引用，因为velocity 自动引用带
     // get、is的方法
+    //     // tip: 为了适配velocity
+    //    // obj.xxx (velocity中相当于使用以下方法)
+    //    // obj.get("xxx");
+    //    // obj.getXXX();
+    //    // obj.isXXX();
     public String get(String key) {
         return dataJSON == null ? null : dataJSON.getString(key);
     }

@@ -17,6 +17,11 @@ public class ViewObject {
         objs.put(key, value);
     }
 
+    // tip: 为了适配velocity
+    // obj.xxx (velocity中相当于使用以下方法)
+    // obj.get("xxx");
+    // obj.getXXX();
+    // obj.isXXX();
     public Object get(String key) {
         return objs.get(key);
     }
