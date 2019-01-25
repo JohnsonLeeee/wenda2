@@ -53,7 +53,12 @@ public class HomeController {
         viewObject.set("followeeCount", followService.getFolloweeCount(userId, EntityType.USER));
         viewObject.set("answerCount", commentService.getAnswerCountByUserId(userId));
         viewObject.set("likeCount", likeService.getAllAnswerLikeCountByUserId(userId));
-        viewObject.set("followed", followService.isFollower(hostHolder.getUser().getId(), EntityType.USER, userId));
+        if (hostHolder.getUser() == null) {
+            viewObject.set("followed", false);
+        } else {
+            viewObject.set("followed", followService.isFollower(hostHolder.getUser().getId(), EntityType.USER, userId));
+        }
+
         model.addAttribute("profileUser", viewObject);
 
         // 最新动态
