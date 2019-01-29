@@ -98,7 +98,7 @@ public class QuestionController {
         // 添加回答栏
         model.addAttribute("comments", vos);
 
-        return "detail";
+        return "question";
     }
 
     @RequestMapping(path = "/question/add", method = {RequestMethod.POST})

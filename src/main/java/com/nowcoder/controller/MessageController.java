@@ -86,7 +86,7 @@ public class MessageController {
             vo.set("unread", messageService.getConversationUnreadCount(localUserId, message.getConversationId()));
         }
         model.addAttribute("conversations", conversations);
-        return "letter";
+        return "message";
     }
 
     @RequestMapping(path = {"/msg/detail"}, method = {RequestMethod.GET})
@@ -111,6 +111,6 @@ public class MessageController {
             logger.error("修改未读消息失败");
         }
 
-        return "letterDetail";
+        return "messageDetail";
     }
 }
