@@ -26,18 +26,23 @@ import java.util.Map;
  **/
 @Service
 public class SearchService {
+    private static final String QUESTION_TITLE_FIELD = "question_title";
+    private static final String QUESTION_CONTENT_FIELD = "question_content";
+
+    private static final Logger logger = LoggerFactory.getLogger(SearchService.class);
+
     @Autowired
     QuestionService questionService;
 
-    private static final Logger logger = LoggerFactory.getLogger(SearchService.class);
+
     /* solrj的用法
         The center of SolrJ is the org.apache.solr.client.solrj package, which contains just five main classes. Begin by creating a SolrClient, which represents the Solr instance you want to use. Then send SolrRequests or SolrQuerys and get back SolrResponses.
         SolrClient is abstract, so to connect to a remote Solr instance, you’ll actually create an instance of either HttpSolrClient, or CloudSolrClient. Both communicate with Solr via HTTP, the difference is that HttpSolrClient is configured using an explicit Solr URL, while CloudSolrClient is configured using the zkHost String for a SolrCloud cluster.
      */
     private static final String urlString = "http://localhost:8983/solr/wenda";
     private SolrClient solr = new HttpSolrClient.Builder(urlString).build();
-    private static final String QUESTION_TITLE_FIELD = "question_title";
-    private static final String QUESTION_CONTENT_FIELD = "question_content";
+
+
 
     public List<Question> searchQuestion(String keyword, int offset, int count,
                                          String highlightPre, String highlightPost) throws SolrServerException, IOException {
@@ -106,6 +111,7 @@ public class SearchService {
         document.addField(QUESTION_CONTENT_FIELD, content);
 
         UpdateResponse response = solr.add(document);
+        solr.commit();
         // logger.info(response.toString());
         return response != null && response.getStatus() == 0;
     }
