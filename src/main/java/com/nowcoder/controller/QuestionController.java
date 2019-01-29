@@ -1,5 +1,9 @@
 package com.nowcoder.controller;
 
+import com.nowcoder.async.EventHandler;
+import com.nowcoder.async.EventModel;
+import com.nowcoder.async.EventProducer;
+import com.nowcoder.async.EventType;
 import com.nowcoder.model.*;
 import com.nowcoder.service.*;
 import org.slf4j.Logger;
@@ -29,8 +33,6 @@ public class QuestionController {
     @Autowired
     QuestionService questionService;
     @Autowired
-    HostHolder hostHolder;
-    @Autowired
     UserService userService;
     @Autowired
     CommentService commentService;
@@ -38,6 +40,11 @@ public class QuestionController {
     LikeService likeService;
     @Autowired
     FollowService followService;
+
+    @Autowired
+    HostHolder hostHolder;
+    @Autowired
+    EventProducer eventProducer;
 
     @RequestMapping(path = {"/question/{qid}"}, method = {RequestMethod.GET})
     public String questionDetail(@PathVariable("qid") int qid,
@@ -115,9 +122,17 @@ public class QuestionController {
             } else {
                 question.setUserId(hostHolder.getUser().getId());
             }
-            logger.info("开始执行questionService.addQuestion");
+            // logger.info("开始执行questionService.addQuestion");
             if (questionService.addQuestion(question) > 0) {
-                logger.info("执行questionService.addQuestion结束");
+                eventProducer.fireEvent(new EventModel(EventType.ADD_QUESTION)
+                        .setActorId(question.getUserId())
+                        .setCarrierEntityType(EntityType.QUESTION)
+                        .setCarrierEntityId(question.getId())
+                        .setCarrierEntityOwnerId(question.getUserId())
+                        .setExts("title", question.getTitle())
+                        .setExts("content", question.getContent())
+                );
+                // logger.info("执行questionService.addQuestion结束");
                 return WendaUtil.getJSONString(0);
             }
         } catch(Exception e) {

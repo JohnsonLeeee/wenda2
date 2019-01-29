@@ -8,7 +8,7 @@ package com.nowcoder.async;
  **/
 
 public enum EventType {
-    LIKE(1), COMMENT(2), LOGIN(3),
+    LIKE(1), LOGIN(3),
     MAIL(4), FOLLOW(5), UNFOLLOW(6),
     ADD_QUESTION(7), ANSWER_QUESTION(8),
     COMMENT_COMMENT(9), FOLLOW_USER(10),

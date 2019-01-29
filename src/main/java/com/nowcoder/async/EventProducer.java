@@ -18,16 +18,19 @@ public class EventProducer {
     JedisAdapter jedisAdapter;
 
     public boolean fireEvent(EventModel eventModel) {
-        try {
-            // BlockingQueue<EventModel> queue = new ArrayBlockingQueue<EventModel>(16);
-            String json = JSONObject.toJSONString(eventModel);
-            String key = RedisKeyUtil.getEventQueueKey();
-            jedisAdapter.lPush(key, json);
 
+        // BlockingQueue<EventModel> queue = new ArrayBlockingQueue<EventModel>(16);
+        String json = JSONObject.toJSONString(eventModel);
+        String key = RedisKeyUtil.getEventQueueKey();
+
+
+        if (jedisAdapter.lPush(key, json) > 0 ) {
             return true;
-        } catch (Exception e) {
+        } else {
             return false;
         }
-    }
 
+
+
+    }
 }

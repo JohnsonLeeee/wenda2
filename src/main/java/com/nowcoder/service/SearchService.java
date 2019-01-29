@@ -64,7 +64,7 @@ public class SearchService {
         QueryResponse response = solr.query(query);
 
         // logger.info(response.toString());
-        logger.info(response.getHighlighting().toString());
+        // logger.info(response.getHighlighting().toString());
 
         // The client makes a network connection and sends the query. Solr processes the query, and the response is sent and parsed into a QueryResponse.
 
@@ -91,7 +91,7 @@ public class SearchService {
                 }
             }
 
-            logger.info(question.getTitle());
+            // logger.info(question.getTitle());
 
             questions.add(question);
 
@@ -106,6 +106,7 @@ public class SearchService {
         document.addField(QUESTION_CONTENT_FIELD, content);
 
         UpdateResponse response = solr.add(document);
+        // logger.info(response.toString());
         return response != null && response.getStatus() == 0;
     }
 }
