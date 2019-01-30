@@ -123,7 +123,7 @@ public class FollowController {
         info.put("count", followService.getFollowerCount(EntityType.QUESTION, questionId));
 
         // 成功返回0， 失败返回1; 然后把信息的Map传给前端
-        logger.info(WendaUtil.getJSONString(result ? 0 : 1, info));
+        // logger.info(WendaUtil.getJSONString(result ? 0 : 1, info));
         return WendaUtil.getJSONString(result ? 0 : 1, info);
     }
 

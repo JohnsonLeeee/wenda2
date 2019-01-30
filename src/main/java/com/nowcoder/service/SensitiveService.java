@@ -1,6 +1,5 @@
 package com.nowcoder.service;
 
-import jdk.internal.util.xml.impl.Input;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,7 +122,7 @@ public class SensitiveService implements InitializingBean {
         return result.toString();
     }
 
-    public static void main(String[] args) {
+    public static void mainx(String[] args) {
         SensitiveService s = new SensitiveService();
         s.addWord("沙雕");
         s.addWord("脑残");

@@ -30,7 +30,7 @@ public class JedisAdapter implements InitializingBean {
         System.out.println(String.format("%d, %s", index, obj.toString()));
     }
 
-    public static void main(String[] args) {
+    public static void mainx(String[] args) {
         Jedis jedis = new Jedis("redis://localhost:6379/9");
         // 删掉本数据库
         // jedis.flushAll()删掉所有数据库

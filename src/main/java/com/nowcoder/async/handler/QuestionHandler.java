@@ -29,7 +29,7 @@ public class QuestionHandler implements EventHandler {
 
     @Override
     public void doHandle(EventModel model) {
-        logger.info("执行了questionhandler");
+        // logger.info("执行了questionhandler");
         int questionId = model.getCarrierEntityId();
         String title = model.getExts("title");
         String content = model.getExts("content");

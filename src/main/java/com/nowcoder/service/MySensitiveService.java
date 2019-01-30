@@ -1,15 +1,11 @@
 package com.nowcoder.service;
 
-import jdk.internal.util.xml.impl.Input;
 import org.apache.commons.lang.CharUtils;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
-import sun.text.normalizer.Trie;
-
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -161,7 +157,7 @@ public class MySensitiveService implements InitializingBean {
 
 
     // 测试敏感词过滤功能
-    public static void main(String[] args) {
+    public static void mainx(String[] args) {
         MySensitiveService test = new MySensitiveService();
         test.addSensitiveWord("bitch");
         test.addSensitiveWord("沙雕");
