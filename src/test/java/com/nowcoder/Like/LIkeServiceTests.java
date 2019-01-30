@@ -24,6 +24,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 public class LIkeServiceTests {
     @Autowired
     LikeService likeService;
+
+    // 初始化like数据，userId前10对前10个回答点赞。
     @Test
     public void contextLoads() {
         System.out.println(likeService.like(2, EntityType.COMMENT, 2));
@@ -35,5 +37,18 @@ public class LIkeServiceTests {
             Assert.assertTrue(likeService.getLikeCountByEntityId(EntityType.COMMENT, entityId) > 0);
         }
         System.out.println(likeService.getLikeCountByEntityId(EntityType.COMMENT, 2));
+    }
+
+    // 测试
+    // 另外还有@Before，初始化数据
+    // @After,清理数据
+
+    @Test
+    public void testLike() {
+        likeService.like(999, EntityType.COMMENT, 999);
+        Assert.assertEquals(1, likeService.getLikeStatus(999, EntityType.COMMENT, 999));
+
+        likeService.disLike(1000, EntityType.COMMENT, 999);
+        Assert.assertEquals(-1, likeService.getLikeStatus(1000, EntityType.COMMENT, 999));
     }
 }

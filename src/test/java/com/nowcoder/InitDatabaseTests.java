@@ -24,7 +24,7 @@ import java.util.Random;
 // import org.springframework.boot.test.SpringApplicationConfiguration;
 @SpringApplicationConfiguration(classes = WendaApplication.class)
 // import org.springframework.test.context.jdbc.Sql;
-@Sql("/init-schema.sql")
+// @Sql("/init-schema.sql")
 public class InitDatabaseTests {
     @Autowired
     UserDAO userDAO;

@@ -64,7 +64,7 @@ public class LikeService {
      * @param userId userId
      * @param entityType entityType
      * @param entityId entityId
-     * @return 1， 点赞； 2， 点踩； 0， 无操作。
+     * @return 1， 点赞； -1， 点踩； 0， 无操作。
      */
     public int getLikeStatus(int userId, EntityType entityType, int entityId) {
         String likeKey = RedisKeyUtil.getLikeKey(entityType, entityId);
